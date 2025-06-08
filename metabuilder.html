@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Governance Action Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            --primary-orange: #d63f1e;
+            --primary-blue: #0228aa;
+            --light-text: #ffffff;
+            --dark-blue-bg: #011a75;
+            --card-bg-color: rgba(0, 0, 0, 0.2);
+            --modal-bg-color: #01218f;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue-bg));
+        }
+        .card-bg {
+            background-color: var(--card-bg-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-bg {
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: var(--modal-bg-color);
+        }
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--light-text);
+        }
+        .btn-primary:hover {
+            background-color: #b83619; /* Darker orange for hover */
+        }
+        .text-accent {
+            color: var(--primary-orange);
+        }
+        .focus-ring-accent:focus {
+            --tw-ring-color: var(--primary-orange);
+        }
+        code {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: #ffc2b3; /* Light orange for code */
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+        .step-indicator {
+            counter-reset: step;
+        }
+        .step-indicator .step {
+            counter-increment: step;
+        }
+         .step-indicator .step:before {
+            content: counter(step);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: #0228aa;
+            color: white;
+            font-weight: bold;
+            margin-right: 0.75rem;
+        }
+        .step-indicator .step.active:before {
+            background-color: var(--primary-orange);
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white">
+
+    <!-- Header -->
+    <header class="bg-black/20 backdrop-blur-sm sticky top-0 z-50 shadow-lg">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-4 text-2xl font-bold text-white">
+                <img src="logo.png" alt="Logo" class="h-10 w-10 rounded-full" onerror="this.onerror=null;this.src='https://placehold.co/40x40/0228aa/ffffff?text=G';">
+                <span>Governance Action Builder</span>
+            </a>
+            <!-- Menu removed as per request -->
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <!-- Page: Build -->
+        <div id="page-build" class="page-content">
+            <section class="text-center pt-20 pb-10">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">Create On-Chain Governance Actions</h1>
+                <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+                    A step-by-step tool to generate the metadata and transaction commands for all seven Cardano governance action types.
+                </p>
+            </section>
+
+            <section class="py-16">
+                <h2 class="text-3xl font-bold text-center text-white mb-12">Select a Governance Action to Begin</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
+                        <h3 class="text-xl font-bold text-white mb-2">Motion of No-Confidence</h3>
+                        <p class="text-gray-300 mb-4 flex-grow">Triggers a 'state of no confidence' in the current Constitutional Committee. For governance to return to a fully operational state, a new committee must be ratified through a subsequent 'New CC / Threshold' action.</p>
+                        <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="no-confidence" data-action-name="Motion of No-Confidence">Create Proposal</button>
+                    </div>
+                    <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
+                        <h3 class="text-xl font-bold text-white mb-2">New CC / Threshold</h3>
+                        <p class="text-gray-300 mb-4 flex-grow">An action to change the composition of the Constitutional Committee, its members' term limits, or the voting threshold required for its decisions. Also used to elect a new committee after a 'Motion of No-Confidence'.</p>
+                         <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="update-committee" data-action-name="New Constitutional Committee / Threshold">Create Proposal</button>
+                    </div>
+                    <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
+                        <h3 class="text-xl font-bold text-white mb-2">Update Constitution</h3>
+                        <p class="text-gray-300 mb-4 flex-grow">A fundamental action to amend the Cardano Constitution or its associated Guardrails Script, allowing the foundational rules of the ecosystem to evolve.</p>
+                        <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="new-constitution" data-action-name="Update to the Constitution">Create Proposal</button>
+                    </div>
+                    <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
+                        <h3 class="text-xl font-bold text-white mb-2">Hard Fork Initiation</h3>
+                        <p class="text-gray-300 mb-4 flex-grow">The most significant technical action, used to trigger a non-backwards-compatible upgrade of the entire Cardano protocol, introducing major new features.</p>
+                        <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="hard-fork" data-action-name="Hard Fork Initiation">Create Proposal</button>
+                    </div>
+                    <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
+                        <h3 class="text-xl font-bold text-white mb-2">Protocol Parameters</h3>
+                        <p class="text-gray-300 mb-4 flex-grow">An action to fine-tune the network's operational settings, such as transaction fees, block size, or staking rewards, to adapt to changing conditions.</p>
+                        <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="parameter-change" data-action-name="Protocol Parameter Change">Create Proposal</button>
+                    </div>
+                    <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
+                        <h3 class="text-xl font-bold text-white mb-2">Treasury Withdrawals</h3>
+                        <p class="text-gray-300 mb-4 flex-grow">An action to request funds from the community-managed Cardano treasury to finance projects and initiatives that benefit the ecosystem.</p>
+                        <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="treasury-withdrawal" data-action-name="Treasury Withdrawal">Create Proposal</button>
+                    </div>
+                    <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
+                        <h3 class="text-xl font-bold text-white mb-2">Info Action</h3>
+                        <p class="text-gray-300 mb-4 flex-grow">A non-binding action with no direct on-chain effect. It is used to gauge community sentiment, conduct polls, or signal intent for future proposals.</p>
+                         <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="info" data-action-name="Info Action">Create Proposal</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal Structure -->
+    <div id="proposal-modal" class="hidden fixed inset-0 z-50 overflow-y-auto modal-bg flex items-center justify-center p-4">
+        <div class="modal-content rounded-xl shadow-2xl w-full max-w-4xl max-h-full overflow-y-auto">
+            <div class="p-6 md:p-8">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 id="modal-title" class="text-2xl font-bold text-white"></h2>
+                        <p class="text-gray-300">Follow the steps below to build your proposal.</p>
+                    </div>
+                    <button id="close-modal-btn" class="text-gray-300 hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div id="modal-body" class="space-y-8">
+                    <!-- This will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="bg-black/20 border-t border-blue-900/50 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400 text-sm">
+            <p>Copyright 2025 Intersect MBO</p>
+            <p class="mt-2">Licensed under the Apache License, Version 2.0 (the "License");</p>
+            <p>you may not use this file except in compliance with the License.</p>
+            <p>You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0" class="text-orange-400 hover:underline" target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // --- UTILITY FUNCTIONS ---
+        const copyToClipboard = (text, button) => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+             try {
+                document.execCommand('copy');
+                const originalText = button.innerHTML;
+                button.innerHTML = 'Copied!';
+                setTimeout(() => { button.innerHTML = originalText; }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy text. Please copy manually.');
+            }
+            document.body.removeChild(textarea);
+        };
+        
+        // --- MODAL AND BUILDER LOGIC ---
+        const modal = document.getElementById('proposal-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const createProposalButtons = document.querySelectorAll('.create-proposal-btn');
+        const closeModalButton = document.getElementById('close-modal-btn');
+        let currentActionType = '';
+
+        const getFormValues = (formId) => {
+            const form = document.getElementById(formId);
+            if (!form) return {};
+            const formData = new FormData(form);
+            const values = {};
+            for (let [key, value] of formData.entries()) {
+                values[key] = value;
+            }
+            return values;
+        };
+        
+        const generateMetadata = () => {
+            const { title, abstract, motivation, rationale, references } = getFormValues('metadata-form');
+            const metadata = {
+              "@context": {
+                "@language": "en-us",
+                "CIP100": "https://github.com/cardano-foundation/CIPs/blob/master/CIP-0100/README.md#",
+                "CIP108": "https://github.com/cardano-foundation/CIPs/blob/master/CIP-0108/README.md#",
+                "hashAlgorithm": "CIP100:hashAlgorithm",
+                "body": {
+                  "@id": "CIP108:body",
+                  "@context": {
+                    "references": {
+                      "@id": "CIP108:references",
+                      "@container": "@set",
+                      "@context": {
+                        "GovernanceMetadata": "CIP100:GovernanceMetadataReference",
+                        "Other": "CIP100:OtherReference",
+                        "label": "CIP100:reference-label",
+                        "uri": "CIP100:reference-uri",
+                        "referenceHash": {
+                          "@id": "CIP108:referenceHash",
+                          "@context": {
+                            "hashDigest": "CIP108:hashDigest",
+                            "hashAlgorithm": "CIP100:hashAlgorithm"
+                          }
+                        }
+                      }
+                    },
+                    "title": "CIP108:title",
+                    "abstract": "CIP108:abstract",
+                    "motivation": "CIP108:motivation",
+                    "rationale": "CIP108:rationale"
+                  }
+                },
+                "authors": {
+                  "@id": "CIP100:authors",
+                  "@container": "@set",
+                  "@context": {
+                    "name": "http://xmlns.com/foaf/0.1/name",
+                    "witness": {
+                      "@id": "CIP100:witness",
+                      "@context": {
+                        "witnessAlgorithm": "CIP100:witnessAlgorithm",
+                        "publicKey": "CIP100:publicKey",
+                        "signature": "CIP100:signature"
+                      }
+                    }
+                  }
+                }
+              },
+              "authors": [],
+              "hashAlgorithm": "blake2b-256",
+              "body": {
+                "title": title || "Title Not Provided",
+                "abstract": abstract || "Abstract Not Provided",
+                "motivation": motivation || "Motivation Not Provided",
+                "rationale": rationale || "Rationale Not Provided",
+                "references": references ? [{
+                    "@type": "CIP100:OtherReference",
+                    "label": "Supporting Document",
+                    "uri": references
+                }] : []
+              }
+            };
+            
+            const metadataString = JSON.stringify(metadata, null, 2);
+            const outputElem = document.getElementById('metadata-output');
+            outputElem.textContent = metadataString;
+            document.getElementById('metadata-output-container').classList.remove('hidden');
+            
+            // --- New logic for download button ---
+            const downloadBtn = document.getElementById('download-json-btn');
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(metadataString);
+            downloadBtn.setAttribute("href", dataStr);
+            downloadBtn.classList.remove('hidden');
+        };
+
+        const buildTransaction = () => {
+            const formValues = getFormValues('transaction-form');
+            const { metadataUrl, depositAddress, prevGovActionId, ...specificParams } = formValues;
+
+            if (!metadataUrl || !depositAddress) {
+                alert('Please provide a Metadata URL and a Deposit Return Address (stake key file name).');
+                return;
+            }
+            
+            let command = `cardano-cli conway governance action`;
+            
+            // Build command based on action type
+            switch (currentActionType) {
+                case 'no-confidence':
+                    command += ` create-no-confidence`;
+                    if (prevGovActionId) command += ` \\\n  --prev-gov-action-tx-id ${prevGovActionId.split('#')[0]} --prev-gov-action-ix ${prevGovActionId.split('#')[1] || '0'}`;
+                    break;
+                case 'update-committee':
+                    command += ` create-update-committee`;
+                    if (prevGovActionId) command += ` \\\n  --prev-gov-action-tx-id ${prevGovActionId.split('#')[0]} --prev-gov-action-ix ${prevGovActionId.split('#')[1] || '0'}`;
+                    if(specificParams.removeMember) command += ` \\\n  --remove-committee-member-cold-verification-key-file path/to/${specificParams.removeMember}.vkey`;
+                    if(specificParams.addMember && specificParams.addMemberEpoch) command += ` \\\n  --add-committee-member-cold-verification-key-file path/to/${specificParams.addMember}.vkey --epoch ${specificParams.addMemberEpoch}`;
+                    if(specificParams.newThreshold) command += ` \\\n  --new-threshold ${specificParams.newThreshold}`;
+                    break;
+                case 'new-constitution':
+                     command += ` create-constitution`;
+                    if (prevGovActionId) command += ` \\\n  --prev-gov-action-tx-id ${prevGovActionId.split('#')[0]} --prev-gov-action-ix ${prevGovActionId.split('#')[1] || '0'}`;
+                    command += ` \\\n  --constitution-url ${specificParams.constitutionUrl} --constitution-hash $(cardano-cli conway governance hash --file-text ${specificParams.constitutionFile})`;
+                    break;
+                case 'hard-fork':
+                    command += ` create-hard-fork`;
+                    if (prevGovActionId) command += ` \\\n  --prev-gov-action-tx-id ${prevGovActionId.split('#')[0]} --prev-gov-action-ix ${prevGovActionId.split('#')[1] || '0'}`;
+                    command += ` \\\n  --protocol-major-version ${specificParams.majorVer} --protocol-minor-version ${specificParams.minorVer}`;
+                    break;
+                case 'parameter-change':
+                    command += ` create-protocol-parameters-update`;
+                    if (prevGovActionId) command += ` \\\n  --prev-gov-action-tx-id ${prevGovActionId.split('#')[0]} --prev-gov-action-ix ${prevGovActionId.split('#')[1] || '0'}`;
+                    if(specificParams.paramKey && specificParams.paramValue) command += ` \\\n  --${specificParams.paramKey} ${specificParams.paramValue}`;
+                    break;
+                case 'treasury-withdrawal':
+                     command += ` create-treasury-withdrawal`;
+                     document.querySelectorAll('.withdrawal-recipient').forEach((el, index) => {
+                        const addr = el.querySelector(`input[name='recipientAddr${index+1}']`).value;
+                        const amount = el.querySelector(`input[name='recipientAmount${index+1}']`).value;
+                        if(addr && amount) {
+                           command += ` \\\n  --withdrawal ${addr}#${amount * 1000000}`; // Convert ADA to Lovelace
+                        }
+                    });
+                    break;
+                case 'info':
+                    command += ` create-info`;
+                    break;
+            }
+            
+            // Add common flags
+            command += ` \\\n  --mainnet`;
+            command += ` \\\n  --governance-action-deposit 100000000`; // Example static deposit
+            command += ` \\\n  --deposit-return-stake-verification-key-file path/to/${depositAddress}.skey`;
+            command += ` \\\n  --anchor-url ${metadataUrl}`;
+            command += ` \\\n  --anchor-data-hash $(cardano-cli conway governance hash --url ${metadataUrl})`;
+            command += ` \\\n  --out-file ${currentActionType}.action`;
+
+            const outputElem = document.getElementById('transaction-output');
+            outputElem.textContent = command;
+            document.getElementById('transaction-output-container').classList.remove('hidden');
+        };
+
+        const getStep1HTML = () => `<div id="step-1" class="step active"><h3 class="text-xl font-semibold text-white mb-4">Step 1: Create Proposal Metadata</h3><form id="metadata-form" class="space-y-4"><input type="text" name="title" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Proposal Title (max 80 chars)"><textarea name="abstract" rows="3" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Abstract..."></textarea><textarea name="motivation" rows="4" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Motivation..."></textarea><textarea name="rationale" rows="4" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Rationale..."></textarea><input type="url" name="references" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Optional: URL to supporting document"><button type="button" id="generate-metadata-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Generate Metadata JSON</button></form><div id="metadata-output-container" class="hidden mt-4"><div class="relative bg-black/30 p-4 rounded-lg"><div class="absolute top-2 right-2 flex space-x-2"><a id="download-json-btn" href="#" download="metadata.json" class="hidden bg-green-600 hover:bg-green-500 text-xs px-2 py-1 rounded text-white font-semibold">Download</a><button class="copy-btn bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button></div><pre><code id="metadata-output"></code></pre></div></div></div>`;
+        const getStep2HTML = () => `<div id="step-2" class="step"><h3 class="text-xl font-semibold text-white mb-4">Step 2: Host Metadata on IPFS</h3><div class="bg-blue-900/30 border border-blue-500 text-blue-200 px-4 py-3 rounded-lg space-y-3"><p>You must now host the generated JSON file on an immutable file storage service like IPFS.</p><ol class="list-decimal list-inside space-y-2"><li>Copy the JSON from Step 1 and save it as a file (e.g., <code>metadata.json</code>).</li><li>Upload this file to an IPFS provider.</li><li>Once uploaded, you will get a URL. You will need this for the next step.</li></ol><p class="font-semibold">Recommended IPFS Web Uploaders:</p><div class="flex space-x-4"><a href="https://web3.storage/" target="_blank" class="text-orange-400 hover:underline">web3.storage</a><a href="https://nft.storage/" target="_blank" class="text-orange-400 hover:underline">NFT.storage</a><a href="https://infura.io/product/ipfs" target="_blank" class="text-orange-400 hover:underline">Infura IPFS</a></div></div></div>`;
+        const getStep3HTML = (actionType) => { let specificFields = ''; const inputClasses = "w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent"; switch (actionType) { case 'update-committee': specificFields = `<input type="text" name="removeMember" class="${inputClasses}" placeholder="Cold VKey file to remove (optional, e.g., cc_cold_1)"><div class="flex gap-4"><input type="text" name="addMember" class="w-2/3 ${inputClasses}" placeholder="Cold VKey file to add (optional, e.g., cc_cold_2)"><input type="number" name="addMemberEpoch" class="w-1/3 ${inputClasses}" placeholder="Term Epoch"></div><input type="text" name="newThreshold" class="${inputClasses}" placeholder="New Threshold (e.g., 0.6)">`; break; case 'new-constitution': specificFields = `<input type="url" name="constitutionUrl" required class="${inputClasses}" placeholder="URL of new constitution text"><input type="text" name="constitutionFile" required class="${inputClasses}" placeholder="Local path to constitution text file">`; break; case 'hard-fork': specificFields = `<div class="flex gap-4"><input type="number" name="majorVer" required class="w-1/2 ${inputClasses}" placeholder="Major Version"><input type="number" name="minorVer" required class="w-1/2 ${inputClasses}" placeholder="Minor Version"></div>`; break; case 'parameter-change': specificFields = `<div class="flex gap-4"><input type="text" name="paramKey" required class="w-1/2 ${inputClasses}" placeholder="Parameter Key (e.g., txFeePerByte)"><input type="text" name="paramValue" required class="w-1/2 ${inputClasses}" placeholder="New Value"></div>`; break; case 'treasury-withdrawal': specificFields = `<div id="withdrawal-recipients-container" class="space-y-2"><div class="flex gap-4 withdrawal-recipient"><input type="text" name="recipientAddr1" required class="w-2/3 ${inputClasses}" placeholder="Recipient Reward Address (bech32)"><input type="number" name="recipientAmount1" required class="w-1/3 ${inputClasses}" placeholder="Amount (ADA)"></div></div><button type="button" id="add-recipient-btn" class="text-sm text-orange-400 hover:underline">+ Add another recipient</button>`; break; } const needsPrevGovId = !['treasury-withdrawal', 'info'].includes(actionType); const prevGovIdField = needsPrevGovId ? `<input type="text" name="prevGovActionId" class="${inputClasses}" placeholder="Previous Gov Action ID (tx_hash#ix)">` : ''; return `<div id="step-3" class="step"><h3 class="text-xl font-semibold text-white mb-4">Step 3: Build Transaction Command</h3><p class="text-gray-300 mb-4 -mt-2 text-sm">This generates the command to create the governance action file. You will still need to build, sign, and submit the final transaction.</p><form id="transaction-form" class="space-y-4"><input type="url" name="metadataUrl" required class="${inputClasses}" placeholder="Paste Metadata URL from Step 2 here"><input type="text" name="depositAddress" required class="${inputClasses}" placeholder="Your Deposit Return Address (stake key file name)">${prevGovIdField}${specificFields}<button type="button" id="build-transaction-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Build Transaction Command</button></form><div id="transaction-output-container" class="hidden mt-4"><div class="relative bg-black/30 p-4 rounded-lg"><button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button><pre><code id="transaction-output"></code></pre></div></div></div>`; };
+        
+        createProposalButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                currentActionType = e.target.dataset.actionType;
+                if (modalTitle) modalTitle.textContent = `Create: ${e.target.dataset.actionName}`;
+                if (modalBody) modalBody.innerHTML = `<div class="step-indicator">${getStep1HTML()}${getStep2HTML()}${getStep3HTML(currentActionType)}</div>`;
+                if (modal) modal.classList.remove('hidden');
+
+                document.getElementById('generate-metadata-btn').addEventListener('click', generateMetadata);
+                document.getElementById('build-transaction-btn').addEventListener('click', buildTransaction);
+                modalBody.querySelectorAll('.copy-btn').forEach(btn => { btn.addEventListener('click', (ev) => { const codeElement = ev.target.closest('.relative').querySelector('code'); copyToClipboard(codeElement.textContent, ev.target); }); });
+                
+                if (currentActionType === 'treasury-withdrawal') {
+                    let recipientCount = 1;
+                    const addRecipientBtn = document.getElementById('add-recipient-btn');
+                    if(addRecipientBtn) {
+                        addRecipientBtn.addEventListener('click', () => { 
+                            recipientCount++; 
+                            const container = document.getElementById('withdrawal-recipients-container'); 
+                            const newRecipient = document.createElement('div'); 
+                            newRecipient.className = 'flex gap-4 withdrawal-recipient'; 
+                            newRecipient.innerHTML = `<input type="text" name="recipientAddr${recipientCount}" required class="w-2/3 bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2" placeholder="Recipient Reward Address ${recipientCount}"><input type="number" name="recipientAmount${recipientCount}" required class="w-1/3 bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2" placeholder="Amount (ADA)">`; 
+                            container.appendChild(newRecipient); 
+                        });
+                    }
+                }
+            });
+        });
+
+        if (closeModalButton) {
+            closeModalButton.addEventListener('click', () => {
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        }
+
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
