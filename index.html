@@ -9,23 +9,49 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
+        :root {
             --primary-orange: #d63f1e;
             --primary-blue: #0228aa;
-            --light-text: #ffffff;
-            --dark-blue-bg: #011a75;
+            --text-color: #ffffff;
+            --text-color-muted: #d1d5db; /* gray-300 */
+            --bg-gradient-start: var(--primary-blue);
+            --bg-gradient-end: #011a75;
             --card-bg-color: rgba(0, 0, 0, 0.2);
             --modal-bg-color: #01218f;
+            --input-bg: rgba(2, 40, 170, 0.5);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --header-bg: rgba(0,0,0,0.2);
+            --guide-section-bg: rgba(0,0,0,0.15);
+            --code-bg: rgba(0, 0, 0, 0.3);
+            --code-color: #ffc2b3;
         }
-        .gradient-bg {
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue-bg));
+
+        body.light-mode {
+            --text-color: #0228aa; /* Use primary blue for text */
+            --text-color-muted: #4b5563; /* gray-600 */
+            --bg-gradient-start: #f9fafb; /* gray-50 */
+            --bg-gradient-end: #e5e7eb; /* gray-200 */
+            --card-bg-color: rgba(255, 255, 255, 0.7);
+            --modal-bg-color: #ffffff;
+            --input-bg: #f3f4f6; /* gray-100 */
+            --border-color: rgba(0, 0, 0, 0.1);
+            --header-bg: rgba(255,255,255,0.7);
+            --guide-section-bg: #ffffff;
+            --code-bg: #e5e7eb;
+            --code-color: #d63f1e;
         }
-        .card-bg {
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            color: var(--text-color);
+        }
+
+        .card-bg, .guide-section {
             background-color: var(--card-bg-color);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
         }
         .modal-bg {
             background-color: rgba(0, 0, 0, 0.7);
@@ -34,10 +60,20 @@
         }
         .modal-content {
             background-color: var(--modal-bg-color);
+            color: var(--text-color);
+        }
+        body.light-mode .modal-content {
+             color: var(--text-color);
+        }
+        body.light-mode .text-gray-300, body.light-mode .text-gray-400 {
+            color: var(--text-color-muted);
+        }
+        body.light-mode .modal-content .text-gray-400 {
+            color: #6b7280; /* gray-500 */
         }
         .btn-primary {
             background-color: var(--primary-orange);
-            color: var(--light-text);
+            color: white;
         }
         .btn-primary:hover {
             background-color: #b83619; /* Darker orange for hover */
@@ -49,8 +85,8 @@
             --tw-ring-color: var(--primary-orange);
         }
         code {
-            background-color: rgba(0, 0, 0, 0.3);
-            color: #ffc2b3; /* Light orange for code */
+            background-color: var(--code-bg);
+            color: var(--code-color);
             padding: 0.2rem 0.4rem;
             border-radius: 0.25rem;
             font-size: 0.9em;
@@ -70,13 +106,11 @@
             width: 2rem;
             height: 2rem;
             border-radius: 50%;
-            background-color: #0228aa;
+            background-color: var(--primary-orange);
             color: white;
             font-weight: bold;
             margin-right: 0.75rem;
-        }
-        .step-indicator .step.active:before {
-            background-color: var(--primary-orange);
+            flex-shrink: 0;
         }
         .nav-link {
             padding: 0.5rem 1rem;
@@ -86,17 +120,26 @@
         .nav-link.active {
             background-color: var(--primary-orange);
             font-weight: 600;
+            color: white;
         }
         .nav-link:not(.active):hover {
             background-color: rgba(255, 255, 255, 0.1);
+        }
+        body.light-mode .nav-link:not(.active):hover {
+             background-color: rgba(0, 0, 0, 0.05);
         }
         .accordion-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-in-out;
-            background-color: rgba(0,0,0,0.2);
-            border-radius: 0 0 0.5rem 0.5rem;
         }
+        body.dark .accordion-content {
+             background-color: rgba(0,0,0,0.2);
+        }
+        body.light-mode .accordion-content {
+             background-color: rgba(255,255,255,0.5);
+        }
+        
         #page-guide h2 {
             font-size: 2.25rem;
             font-weight: 800;
@@ -113,31 +156,84 @@
         #page-guide p, #page-guide li {
             font-size: 1.1rem;
             line-height: 1.6;
-            color: rgb(209 213 219);
         }
          #page-guide ul {
             list-style-type: disc;
             padding-left: 2rem;
             margin-bottom: 1rem;
+         }
+        #network-selector {
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        #page-guide .guide-section {
-            background-color: rgba(0,0,0,0.15);
-            padding: 2rem;
-            border-radius: 1rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        body.light-mode #network-selector {
+             background-color: #f3f4f6;
+             border: 1px solid #d1d5db;
+        }
+        header {
+            transition: transform 0.3s ease-in-out;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+        .input-styled {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+         body.light-mode .input-styled::placeholder {
+            color: #9ca3af; /* gray-400 */
+         }
+         body.light-mode .modal-content label {
+            color: var(--text-color);
+         }
+         body.light-mode .modal-content #guardrail-warning {
+             color: #fbbf24; /* amber-400 */
+         }
+         .step-indicator .step:before {
+            display: inline-flex;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+        }
+        .step > div:last-child {
+            flex-grow: 1;
         }
     </style>
 </head>
-<body class="gradient-bg text-white">
+<body class="">
 
     <!-- Header -->
-    <header class="bg-black/20 backdrop-blur-sm sticky top-0 z-50 shadow-lg">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="flex items-center space-x-4 text-2xl font-bold text-white">
-                <span>Governance Action Builder</span>
-            </a>
-            <div class="flex items-center space-x-2">
+    <header id="main-header" class="sticky top-0 z-50 shadow-lg">
+        <nav class="container mx-auto px-6 py-4 flex flex-col">
+            <!-- Top row for desktop, stacks on mobile -->
+            <div class="w-full flex flex-col items-center md:flex-row md:justify-between">
+                <!-- Title: Always visible -->
+                <a href="#" class="flex items-center space-x-4 text-2xl font-bold">
+                    <span>Governance Action Builder</span>
+                </a>
+                
+                <!-- Controls: Stack below title on mobile, move to the right on desktop -->
+                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                     <select id="network-selector" class="rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus-ring-accent">
+                         <option value="--mainnet">Mainnet</option>
+                         <option value="--preprod-magic 1">PreProd</option>
+                         <option value="--preview-magic 2">Preview</option>
+                         <option value="--testnet-magic 4">SanchoNet</option>
+                     </select>
+                    <button id="theme-toggle" class="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                        <svg id="theme-icon-light" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-15.66l-.7.7M4.04 19.96l-.7.7M21 12h-1M4 12H3m15.66 8.66l-.7-.7M4.04 4.04l-.7-.7M12 18a6 6 0 100-12 6 6 0 000 12z"/></svg>
+                        <svg id="theme-icon-dark" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Bottom row (for navigation links), always centered -->
+            <div class="w-full flex justify-center items-center space-x-2 mt-4">
                 <button id="nav-build" class="nav-link active">Builder</button>
                 <button id="nav-examples" class="nav-link">Examples</button>
                 <button id="nav-guide" class="nav-link">Guide</button>
@@ -148,48 +244,48 @@
     <main class="container mx-auto px-6 py-12">
         <!-- Page: Build -->
         <div id="page-build" class="page-content">
-            <section class="text-center pt-20 pb-10">
-                <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">Create On-Chain Governance Actions</h1>
+            <section class="text-center pt-10 md:pt-20 pb-10">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Create On-Chain Governance Actions</h1>
                 <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
                     A step-by-step tool to generate the metadata and transaction commands for all seven Cardano governance action types.
                 </p>
             </section>
 
             <section class="py-16">
-                <h2 class="text-3xl font-bold text-center text-white mb-12">Select a Governance Action to Begin</h2>
+                <h2 class="text-3xl font-bold text-center mb-12">Select a Governance Action to Begin</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
-                        <h3 class="text-xl font-bold text-white mb-2">New Constitution</h3>
+                        <h3 class="text-xl font-bold mb-2">New Constitution</h3>
                         <p class="text-gray-300 mb-4 flex-grow">A fundamental action to amend the Cardano Constitution or its associated Guardrails Script, allowing the foundational rules of the ecosystem to evolve.</p>
                         <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="new-constitution" data-action-name="New Constitution">Create Proposal</button>
                     </div>
                     <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
-                        <h3 class="text-xl font-bold text-white mb-2">Hard Fork Initiation</h3>
+                        <h3 class="text-xl font-bold mb-2">Hard Fork Initiation</h3>
                         <p class="text-gray-300 mb-4 flex-grow">The most significant technical action, used to trigger a non-backwards-compatible upgrade of the entire Cardano protocol, introducing major new features.</p>
                         <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="hard-fork" data-action-name="Hard Fork Initiation">Create Proposal</button>
                     </div>
                     <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
-                        <h3 class="text-xl font-bold text-white mb-2">Protocol Parameters</h3>
+                        <h3 class="text-xl font-bold mb-2">Protocol Parameters</h3>
                         <p class="text-gray-300 mb-4 flex-grow">An action to fine-tune the network's operational settings, such as transaction fees, block size, or staking rewards, to adapt to changing conditions.</p>
                         <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="parameter-change" data-action-name="Protocol Parameter Change">Create Proposal</button>
                     </div>
                     <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
-                        <h3 class="text-xl font-bold text-white mb-2">Treasury Withdrawals</h3>
+                        <h3 class="text-xl font-bold mb-2">Treasury Withdrawals</h3>
                         <p class="text-gray-300 mb-4 flex-grow">An action to request funds from the community-managed Cardano treasury to finance projects and initiatives that benefit the ecosystem.</p>
                         <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="treasury-withdrawal" data-action-name="Treasury Withdrawal">Create Proposal</button>
                     </div>
                     <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
-                        <h3 class="text-xl font-bold text-white mb-2">Motion of No-Confidence</h3>
+                        <h3 class="text-xl font-bold mb-2">Motion of No-Confidence</h3>
                         <p class="text-gray-300 mb-4 flex-grow">Triggers a 'state of no confidence' in the current Constitutional Committee. For governance to return to a fully operational state, a new committee must be ratified through a subsequent 'Update Committee / Threshold' action.</p>
                         <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="no-confidence" data-action-name="Motion of No-Confidence">Create Proposal</button>
                     </div>
                     <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
-                        <h3 class="text-xl font-bold text-white mb-2">Update Committee / Threshold</h3>
+                        <h3 class="text-xl font-bold mb-2">Update Committee / Threshold</h3>
                         <p class="text-gray-300 mb-4 flex-grow">An action to change the composition of the Constitutional Committee, its members' term limits, or the voting threshold required for its decisions. Also used to elect a new committee after a 'Motion of No-Confidence'.</p>
                          <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="update-committee" data-action-name="Update Committee / Threshold">Create Proposal</button>
                     </div>
                     <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
-                        <h3 class="text-xl font-bold text-white mb-2">Info Action</h3>
+                        <h3 class="text-xl font-bold mb-2">Info Action</h3>
                         <p class="text-gray-300 mb-4 flex-grow">A non-binding action with no direct on-chain effect. It is used to gauge community sentiment, conduct polls, or signal intent for future proposals.</p>
                          <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="info" data-action-name="Info Action">Create Proposal</button>
                     </div>
@@ -199,8 +295,8 @@
         
         <!-- Page: Examples -->
         <div id="page-examples" class="page-content hidden">
-            <section class="text-center pt-20 pb-10">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 leading-tight">Governance Action Examples</h1>
+            <section class="text-center pt-10 md:pt-20 pb-10">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">Governance Action Examples</h1>
                 <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
                     Complete transaction examples for each governance action type. Click any action to expand and see the details.
                 </p>
@@ -213,27 +309,27 @@
 
         <!-- Page: Guide -->
         <div id="page-guide" class="page-content hidden">
-            <div class="max-w-4xl mx-auto pt-20 pb-10">
-                <h2>A Guide to Cardano Governance Actions</h2>
-                <div class="guide-section">
+            <div class="max-w-4xl mx-auto pt-10 md:pt-20 pb-10 space-y-8">
+                 <h2>A Guide to Cardano Governance Actions</h2>
+                 <div class="card-bg rounded-xl p-6 md:p-8">
                     <h3>An Introduction to Governance Actions</h3>
                     <p>A governance action is a formal proposal submitted on the Cardano blockchain to make a change or signal an intent. It is the fundamental mechanism through which the Cardano community can collectively decide on the future of the network. This on-chain system ensures that all decisions are transparent, auditable, and driven by stakeholder consensus.</p>
                 </div>
 
-                <div class="guide-section">
+                 <div class="card-bg rounded-xl p-6 md:p-8">
                     <h3>Key Things to Know Before Submitting</h3>
                     <ul>
-                        <li><strong>Who Votes?</strong> Voting power is distributed among three groups: Delegated Representatives (DReps), Stake Pool Operators (SPOs), and the Constitutional Committee (CC). The specific group(s) required to vote depends on the type of action proposed. For example, a Hard Fork requires a vote from all three, while a Treasury Withdrawal is decided by DReps.</li>
-                        <li><strong>How much does it cost?</strong> Submitting a governance action requires a deposit in ADA, which is returned to you when the action is finalized (either enacted or rejected). The current deposit amount is set by a protocol parameter and is intended to prevent spam.</li>
-                        <li><strong>How long does voting last?</strong> The voting period is tied to Cardano's epoch system. Once an action is submitted, it enters a ratification phase where it can be voted upon. This period typically lasts for a set number of epochs (e.g., up to 10 epochs for some actions), giving the community ample time to review, debate, and cast their votes.</li>
+                        <li><strong>Who Votes?</strong> Voting power is distributed among three groups: Delegated Representatives (DReps), Stake Pool Operators (SPOs), and the Constitutional Committee (CC). The specific group(s) required to vote depends on the type of action proposed.</li>
+                        <li><strong>How much does it cost?</strong> Submitting a governance action requires a deposit in Ada, which is returned to you when the action is finalized (either enacted or rejected). The current deposit amount is set by a protocol parameter (currently 100 000 Ada) and is intended to prevent spam.</li>
+                        <li><strong>How long does voting last?</strong> The voting period is tied to Cardano's epoch system. Once an action is submitted, it enters a ratification phase where it can be voted upon. This period typically lasts for a set number of epochs (currently 6 epochs for all governance action types), giving the community ample time to review, debate, and cast their votes.</li>
                     </ul>
                 </div>
 
-                <div class="guide-section">
+                 <div class="card-bg rounded-xl p-6 md:p-8">
                     <h3>How to Write a High-Quality Proposal</h3>
                     <p>A well-written proposal is crucial for gaining community support. The metadata you generate with this tool is your chance to convince stakeholders to vote 'Yes'. Your goal should be clarity, transparency, and a compelling argument.</p>
                     
-                    <h3>The Anatomy of a Proposal (CIP-108)</h3>
+                    <h3 class="mt-8">The Anatomy of a Proposal (CIP-108)</h3>
                     <p>Your proposal metadata should contain the following four key fields:</p>
                     <ul>
                         <li><strong>Title:</strong> A clear, concise, and descriptive title. It should immediately tell voters what the proposal is about. (Max 80 characters)</li>
@@ -243,7 +339,7 @@
                     </ul>
                 </div>
 
-                 <div class="guide-section">
+                 <div class="card-bg rounded-xl p-6 md:p-8">
                     <h3>Best Practices for Success</h3>
                     <ul>
                         <li><strong>Engage the Community First:</strong> Before submitting on-chain, discuss your idea on platforms like the Cardano Forum, Discord, or X/Twitter. Gather feedback, refine your proposal, and build consensus.</li>
@@ -256,7 +352,6 @@
 
             </div>
         </div>
-
     </main>
 
     <!-- Modal Structure -->
@@ -266,8 +361,8 @@
                 <!-- Modal Header -->
                 <div class="flex justify-between items-start mb-6">
                     <div>
-                        <h2 id="modal-title" class="text-2xl font-bold text-white"></h2>
-                        <p class="text-gray-300">Follow the steps below to build your proposal.</p>
+                        <h2 id="modal-title" class="text-2xl font-bold"></h2>
+                        <p class="text-gray-400">Follow the steps below to build your proposal.</p>
                     </div>
                     <button id="close-modal-btn" class="text-gray-300 hover:text-white transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -283,7 +378,7 @@
     </div>
 
 
-    <footer class="bg-black/20 border-t border-blue-900/50 mt-20">
+    <footer class="bg-black/20 border-t border-white/10 mt-20">
         <div class="container mx-auto px-6 py-8 text-center text-gray-400 text-sm">
             <p class="mb-4">Built by <a href="https://x.com/ThomasNordicADA" target="_blank" class="text-orange-400 hover:underline">Thomas Lindseth</a> under harassment by <a href="https://x.com/Hornan7" target="_blank" class="text-orange-400 hover:underline">Mike Hornan</a>.</p>
             <p class="mt-2">Licensed under the Apache License, Version 2.0 (the "License");</p>
@@ -308,7 +403,7 @@
   "hashAlgorithm": "blake2b-256"
 }`,
               action: `cardano-cli conway governance action create-constitution \\
-  --mainnet \\
+  ##NETWORK## \\
   --governance-action-deposit 1000000000 \\
   --deposit-return-stake-verification-key-file path/to/stake.vkey \\
   --anchor-url https://ipfs.io/ipfs/QmConstitutionMeta... \\
@@ -318,7 +413,7 @@
   --guardrails-script-hash 5908545908510101003232323232323232323232323232323232323232323232323232323232323232323232323232323232259323255333573466e1d20000011180098111bab357426ae88d55cf00104554ccd5cd19b87480100044600422c6aae74004dd51aba1357446ae88d55cf1baa3255333573466e1d200a35573a002226ae84d5d11aab9e00111637546ae84d5d11aba235573c6ea800642b26006003149a2c8a4c301f801c0052000c00e0070018016006901e4070c00e003000c00d20d00fc000c0003003800a4005801c00e003002c00d20c09a0c80e1801c006001801a4101b5881380018000600700148013003801c006005801a410100078001801c006001801a4101001f8001800060070014801b0038018096007001800600690404002600060001801c0052008c00e006025801c006001801a41209d8001800060070014802b003801c006005801a410112f501c3003800c00300348202b7881300030000c00e00290066007003800c00b003482032ad7b806038403060070014803b00380180960003003800a4021801c00e003002c00d20f40380e1801c006001801a41403f800100a0c00e0029009600f0030078040c00e002900a600f003800c00b003301a483403e01a600700180060066034904801e00060001801c0052016c01e00600f801c006001801980c2402900e30000c00e002901060070030128060c00e00290116007003800c00b003483c0ba03860070018006006906432e00040283003800a40498003003800a404d802c00e00f003800c00b003301a480cb0003003800c003003301a4802b00030001801c01e0070018016006603490605c016000600700180060066034904827600060030000c00e0029014600b003801c00c04b003800c00300348203a2489b00030001801c00e006025801c006001801a4101b11dc2df80018000c0003003800a4055802c00e007003012c00e003000c00d2080b8b872c000c0006007003801809600700180060069040607e4155016000600030000c00e00290166007003012c00e003000c00d2080c001c000c0003003800a405d801c00e003002c00d20c80180e1801c006001801a412007800100a0c00e00290186007003013c0006007001480cb005801801e006003801800e00600500403003800a4069802c00c00f003001c00c007003803c00e003002c00c05300333023480692028c0004014c00c00b003003c00c00f003003c00e00f003800c00b00301480590052008003003800a406d801c00e003002c00d2000c00d2006c00060070018006006900a600060001801c0052038c00e007001801600690006006901260003003800c003003483281300020141801c005203ac00e006027801c006001801a403d800180006007001480f3003801804e00700180060069040404af3c4e302600060001801c005203ec00e006013801c006001801a4101416f0fd20b80018000600700148103003801c006005801a403501c3003800c0030034812b00030000c00e0029021600f003800c00a01ac00e003000c00ccc08d20d00f4800b00030000c0000000000803c00c016008401e006009801c006001801807e0060298000c000401e006007801c0060018018074020c000400e00f003800c00b003010c000802180020070018006006019801805e0003000400600580180760060138000800c00b00330134805200c400e00300080330004006005801a4001801a410112f58000801c00600901260008019806a40118002007001800600690404a75ee01e00060008018046000801801e000300c4832004c025201430094800a0030028052003002c00d2002c000300648010c0092002300748028c0312000300b48018c0292012300948008c0212066801a40018000c0192008300a2233335573e00250002801994004d55ce800cd55cf0008d5d08014c00cd5d10011263009222532900389800a4d2219002912c80344c01526910c80148964cc04cdd68010034564cc03801400626601800e0071801226601800e01518010096400a3000910c008600444002600244004a664600200244246466004460044460040064600444600200646a660080080066a00600224446600644b20051800484ccc02600244666ae68cdc3801000c00200500a91199ab9a33710004003000801488ccd5cd19b89002001800400a44666ae68cdc4801000c00a00122333573466e20008006005000912a999ab9a3371200400222002220052255333573466e2400800444008440040026eb400a42660080026eb000a4264666015001229002914801c8954ccd5cd19b8700400211333573466e1c00c006001002118011229002914801c88cc044cdc100200099b82002003245200522900391199ab9a3371066e08010004cdc1001001c002004403245200522900391199ab9a3371266e08010004cdc1001001c00a00048a400a45200722333573466e20cdc100200099b820020038014000912c99807001000c40062004912c99807001000c400a2002001199919ab9a357466ae880048cc028dd69aba1003375a6ae84008d5d1000934000dd60010a40064666ae68d5d1800c0020052225933006003357420031330050023574400318010600a444aa666ae68cdc3a400000222c22aa666ae68cdc4000a4000226600666e05200000233702900000088994004cdc2001800ccdc20010008cc010008004c01088954ccd5cd19b87480000044400844cc00c004cdc300100091119803112c800c60012219002911919806912c800c4c02401a442b26600a004019130040018c008002590028c804c8888888800d1900991111111002a244b267201722222222008001000c600518000001112a999ab9a3370e004002230001155333573466e240080044600823002229002914801c88ccd5cd19b893370400800266e0800800e00100208c8c0040048c0088cc008008005 \\
   --out-file constitution.action`,
               build: `cardano-cli conway transaction build \\
-  --mainnet \\
+  ##NETWORK## \\
   --tx-in 861...#0 \\
   --change-address addr1... \\
   --proposal-file constitution.action \\
@@ -327,10 +422,10 @@
   --tx-body-file tx.raw \\
   --signing-key-file path/to/payment.skey \\
   --signing-key-file path/to/drep.skey \\
-  --mainnet \\
+  ##NETWORK## \\
   --out-file tx.signed`,
               submit: `cardano-cli conway transaction submit \\
-  --mainnet \\
+  ##NETWORK## \\
   --tx-file tx.signed`
             },
             'Hard Fork Initiation': {
@@ -346,7 +441,7 @@
   "hashAlgorithm": "blake2b-256"
 }`,
                 action: `cardano-cli conway governance action create-hard-fork \\
-  --mainnet \\
+  ##NETWORK## \\
   --prev-gov-action-tx-id b48... --prev-gov-action-ix 1 \\
   --governance-action-deposit 1000000000 \\
   --deposit-return-stake-verification-key-file path/to/stake.vkey \\
@@ -355,26 +450,14 @@
   --protocol-major-version 10 \\
   --protocol-minor-version 0 \\
   --out-file hardfork.action`,
-                build: `cardano-cli conway transaction build \\
-  --mainnet \\
-  --tx-in 123...#1 \\
-  --change-address addr1... \\
-  --proposal-file hardfork.action \\
-  --out-file tx.raw`,
-                sign: `cardano-cli conway transaction sign \\
-  --tx-body-file tx.raw \\
-  --signing-key-file path/to/payment.skey \\
-  --signing-key-file path/to/cc_hot.skey \\
-  --mainnet \\
-  --out-file tx.signed`,
-                submit: `cardano-cli conway transaction submit \\
-  --mainnet \\
-  --tx-file tx.signed`
+                build: `...`,
+                sign: `...`,
+                submit: `...`
             },
             'Protocol Parameters': {
                 metadata: `...`,
                 action: `cardano-cli conway governance action create-protocol-parameters-update \\
-  --mainnet \\
+  ##NETWORK## \\
   --prev-gov-action-tx-id b48... --prev-gov-action-ix 1 \\
   --governance-action-deposit 1000000000 \\
   --deposit-return-stake-verification-key-file path/to/stake.vkey \\
@@ -398,28 +481,16 @@
   "authors": [], "hashAlgorithm": "blake2b-256"
 }`,
                 action: `cardano-cli conway governance action create-treasury-withdrawal \\
-  --mainnet \\
+  ##NETWORK## \\
   --governance-action-deposit 1000000000 \\
   --deposit-return-stake-verification-key-file path/to/stake.vkey \\
   --withdrawal "addr_test1...#50000000000" \\
   --anchor-url https://ipfs.io/ipfs/QmW... \\
   --anchor-data-hash 7a2... \\
   --out-file treasury.action`,
-                build: `cardano-cli conway transaction build \\
-  --mainnet \\
-  --tx-in 861...#0 \\
-  --change-address addr1... \\
-  --proposal-file treasury.action \\
-  --out-file tx.raw`,
-                sign: `cardano-cli conway transaction sign \\
-  --tx-body-file tx.raw \\
-  --signing-key-file path/to/payment.skey \\
-  --signing-key-file path/to/drep.skey \\
-  --mainnet \\
-  --out-file tx.signed`,
-                submit: `cardano-cli conway transaction submit \\
-  --mainnet \\
-  --tx-file tx.signed`
+                build: `...`,
+                sign: `...`,
+                submit: `...`
             },
             'Motion of No-Confidence': {
                 metadata: `{
@@ -433,33 +504,21 @@
   "authors": [], "hashAlgorithm": "blake2b-256"
 }`,
                 action: `cardano-cli conway governance action create-no-confidence \\
-  --mainnet \\
+  ##NETWORK## \\
   --prev-gov-action-tx-id a12... --prev-gov-action-ix 0 \\
   --governance-action-deposit 1000000000 \\
   --deposit-return-stake-verification-key-file path/to/stake.vkey \\
   --anchor-url https://ipfs.io/ipfs/QmNoConfidence... \\
   --anchor-data-hash 9f1... \\
   --out-file noconfidence.action`,
-                build: `cardano-cli conway transaction build \\
-  --mainnet \\
-  --tx-in 456...#0 \\
-  --change-address addr1... \\
-  --proposal-file noconfidence.action \\
-  --out-file tx.raw`,
-                sign: `cardano-cli conway transaction sign \\
-  --tx-body-file tx.raw \\
-  --signing-key-file path/to/payment.skey \\
-  --signing-key-file path/to/drep.skey \\
-  --mainnet \\
-  --out-file tx.signed`,
-                submit: `cardano-cli conway transaction submit \\
-  --mainnet \\
-  --tx-file tx.signed`
+                build: `...`,
+                sign: `...`,
+                submit: `...`
             },
             'Update Committee / Threshold': {
                 metadata: `...`,
                 action: `cardano-cli conway governance action create-update-committee \\
-  --mainnet \\
+  ##NETWORK## \\
   --prev-gov-action-tx-id f4c... --prev-gov-action-ix 0 \\
   --governance-action-deposit 1000000000 \\
   --deposit-return-stake-verification-key-file path/to/stake.vkey \\
@@ -485,27 +544,15 @@
   "authors": [], "hashAlgorithm": "blake2b-256"
 }`,
                 action: `cardano-cli conway governance action create-info \\
-  --mainnet \\
+  ##NETWORK## \\
   --governance-action-deposit 1000000000 \\
   --deposit-return-stake-verification-key-file path/to/stake.vkey \\
   --anchor-url https://ipfs.io/ipfs/QmW... \\
   --anchor-data-hash 4f8... \\
   --out-file info.action`,
-                build: `cardano-cli conway transaction build \\
-  --mainnet \\
-  --tx-in 861...#0 \\
-  --change-address addr1... \\
-  --proposal-file info.action \\
-  --out-file tx.raw`,
-                sign: `cardano-cli conway transaction sign \\
-  --tx-body-file tx.raw \\
-  --signing-key-file path/to/payment.skey \\
-  --signing-key-file path/to/drep.skey \\
-  --mainnet \\
-  --out-file tx.signed`,
-                submit: `cardano-cli conway transaction submit \\
-  --mainnet \\
-  --tx-file tx.signed`
+                build: `...`,
+                sign: `...`,
+                submit: `...`
             }
         };
 
@@ -519,14 +566,21 @@
             document.body.appendChild(textarea);
             textarea.select();
              try {
-                document.execCommand('copy');
-                const originalText = button.innerHTML;
-                button.innerHTML = 'Copied!';
-                setTimeout(() => { button.innerHTML = originalText; }, 2000);
-            } catch (err) {
-                console.error('Failed to copy text: ', err);
-                alert('Failed to copy text. Please copy manually.');
-            }
+                 document.execCommand('copy');
+                 const originalText = button.innerHTML;
+                 button.innerHTML = 'Copied!';
+                 setTimeout(() => { button.innerHTML = originalText; }, 2000);
+             } catch (err) {
+                 console.error('Failed to copy text: ', err);
+                 // Fallback for browsers that don't support execCommand
+                 navigator.clipboard.writeText(text).then(() => {
+                     const originalText = button.innerHTML;
+                     button.innerHTML = 'Copied!';
+                     setTimeout(() => { button.innerHTML = originalText; }, 2000);
+                 }).catch(err => {
+                     console.error('Fallback copy failed', err);
+                 });
+             }
             document.body.removeChild(textarea);
         };
         
@@ -537,6 +591,16 @@
         const pageBuild = document.getElementById('page-build');
         const pageExamples = document.getElementById('page-examples');
         const pageGuide = document.getElementById('page-guide');
+        const networkSelector = document.getElementById('network-selector');
+
+        let currentNetwork = '--mainnet';
+        networkSelector.addEventListener('change', (e) => {
+            currentNetwork = e.target.value;
+            // Re-render examples if the page is visible
+            if (!pageExamples.classList.contains('hidden')) {
+                renderExamples();
+            }
+        });
 
         const navigateTo = (page) => {
             pageBuild.classList.add('hidden');
@@ -552,6 +616,7 @@
             } else if (page === 'examples') {
                 pageExamples.classList.remove('hidden');
                 navExamplesBtn.classList.add('active');
+                renderExamples();
             } else if (page === 'guide') {
                 pageGuide.classList.remove('hidden');
                 navGuideBtn.classList.add('active');
@@ -648,9 +713,10 @@
             };
             
             const metadataString = JSON.stringify(metadata, null, 2);
-            const outputElem = document.getElementById('metadata-output');
+            const outputContainer = document.getElementById('metadata-output-container');
+            const outputElem = outputContainer.querySelector('code');
             outputElem.textContent = metadataString;
-            document.getElementById('metadata-output-container').classList.remove('hidden');
+            outputContainer.classList.remove('hidden');
             
             const downloadBtn = document.getElementById('download-json-btn');
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(metadataString);
@@ -660,12 +726,14 @@
 
         const buildTransaction = () => {
             const form = document.getElementById('transaction-form');
+            if (!form) return;
             const formData = new FormData(form);
             const formValues = Object.fromEntries(formData.entries());
             const { metadataUrl, depositAddress, prevGovActionId, guardrailOption, ...specificParams } = formValues;
 
             if (!metadataUrl || !depositAddress) {
-                alert('Please provide a Metadata URL and a Deposit Return Address (stake key file name).');
+                // A non-blocking notification would be better here.
+                console.warn('Please provide a Metadata URL and a Deposit Return Address (stake key file name).');
                 return;
             }
             
@@ -699,7 +767,7 @@
                     break;
                 case 'new-constitution':
                     if (!specificParams.constitutionUrl || !specificParams.constitutionFile) {
-                        alert('For a New Constitution, the Constitution URL and local file path are required.');
+                        console.warn('For a New Constitution, the Constitution URL and local file path are required.');
                         return;
                     }
                     command += ` create-constitution`;
@@ -735,8 +803,8 @@
                     break;
             }
             
-            command += ` \\\n  --mainnet`;
-            command += ` \\\n  --governance-action-deposit 100000000`; 
+            command += ` \\\n  ${currentNetwork}`;
+            command += ` \\\n  --governance-action-deposit 100000`; 
             command += ` \\\n  --deposit-return-stake-verification-key-file path/to/${depositAddress}.skey`;
             command += ` \\\n  --anchor-url ${metadataUrl}`;
             command += ` \\\n  --anchor-data-hash $(cardano-cli conway governance hash --url ${metadataUrl})`;
@@ -747,29 +815,29 @@
             document.getElementById('transaction-output-container').classList.remove('hidden');
         };
 
-        const getStep1HTML = () => `<div id="step-1" class="step active"><h3 class="text-xl font-semibold text-white mb-4">Step 1: Create Proposal Metadata</h3><form id="metadata-form" class="space-y-4"><input type="text" name="title" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Proposal Title (max 80 chars)"><textarea name="abstract" rows="3" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Abstract..."></textarea><textarea name="motivation" rows="4" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Motivation..."></textarea><textarea name="rationale" rows="4" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Rationale..."></textarea><input type="url" name="references" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Optional: URL to supporting document"><button type="button" id="generate-metadata-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Generate Metadata JSON</button></form><div id="metadata-output-container" class="hidden mt-4"><div class="relative bg-black/30 p-4 rounded-lg"><div class="absolute top-2 right-2 flex space-x-2"><a id="download-json-btn" href="#" download="metadata.json" class="hidden bg-green-600 hover:bg-green-500 text-xs px-2 py-1 rounded text-white font-semibold">Download</a><button class="copy-btn bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button></div><pre><code id="metadata-output"></code></pre></div></div></div>`;
-        const getStep2HTML = () => `<div id="step-2" class="step"><h3 class="text-xl font-semibold text-white mb-4">Step 2: Host Metadata on IPFS</h3><div class="bg-blue-900/30 border border-blue-500 text-blue-200 px-4 py-3 rounded-lg space-y-3"><p>You must now host the generated JSON file on an immutable file storage service like IPFS.</p><ol class="list-decimal list-inside space-y-2"><li>Copy the JSON from Step 1 and save it as a file (e.g., <code>metadata.json</code>).</li><li>Upload this file to an IPFS provider.</li><li>Once uploaded, you will get a URL. You will need this for the next step.</li></ol><p class="font-semibold">Recommended IPFS Web Uploaders:</p><div class="flex space-x-4"><a href="https://web3.storage/" target="_blank" class="text-orange-400 hover:underline">web3.storage</a><a href="https://nft.storage/" target="_blank" class="text-orange-400 hover:underline">NFT.storage</a><a href="https://infura.io/product/ipfs" target="_blank" class="text-orange-400 hover:underline">Infura IPFS</a></div></div></div>`;
-        const getStep3HTML = (actionType) => { let specificFields = ''; const inputClasses = "w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent"; const existingGuardrailHash = '5908545908510101003232323232323232323232323232323232323232323232323232323232323232323232323232323232259323255333573466e1d20000011180098111bab357426ae88d55cf00104554ccd5cd19b87480100044600422c6aae74004dd51aba1357446ae88d55cf1baa3255333573466e1d200a35573a002226ae84d5d11aab9e00111637546ae84d5d11aba235573c6ea800642b26006003149a2c8a4c301f801c0052000c00e0070018016006901e4070c00e003000c00d20d00fc000c0003003800a4005801c00e003002c00d20c09a0c80e1801c006001801a4101b5881380018000600700148013003801c006005801a410100078001801c006001801a4101001f8001800060070014801b0038018096007001800600690404002600060001801c0052008c00e006025801c006001801a41209d8001800060070014802b003801c006005801a410112f501c3003800c00300348202b7881300030000c00e00290066007003800c00b003482032ad7b806038403060070014803b00380180960003003800a4021801c00e003002c00d20f40380e1801c006001801a41403f800100a0c00e0029009600f0030078040c00e002900a600f003800c00b003301a483403e01a600700180060066034904801e00060001801c0052016c01e00600f801c006001801980c2402900e30000c00e002901060070030128060c00e00290116007003800c00b003483c0ba03860070018006006906432e00040283003800a40498003003800a404d802c00e00f003800c00b003301a480cb0003003800c003003301a4802b00030001801c01e0070018016006603490605c016000600700180060066034904827600060030000c00e0029014600b003801c00c04b003800c00300348203a2489b00030001801c00e006025801c006001801a4101b11dc2df80018000c0003003800a4055802c00e007003012c00e003000c00d2080b8b872c000c0006007003801809600700180060069040607e4155016000600030000c00e00290166007003012c00e003000c00d2080c001c000c0003003800a405d801c00e003002c00d20c80180e1801c006001801a412007800100a0c00e00290186007003013c0006007001480cb005801801e006003801800e00600500403003800a4069802c00c00f003001c00c007003803c00e003002c00c05300333023480692028c0004014c00c00b003003c00c00f003003c00e00f003800c00b00301480590052008003003800a406d801c00e003002c00d2000c00d2006c00060070018006006900a600060001801c0052038c00e007001801600690006006901260003003800c003003483281300020141801c005203ac00e006027801c006001801a403d800180006007001480f3003801804e00700180060069040404af3c4e302600060001801c005203ec00e006013801c006001801a4101416f0fd20b80018000600700148103003801c006005801a403501c3003800c0030034812b00030000c00e0029021600f003800c00a01ac00e003000c00ccc08d20d00f4800b00030000c0000000000803c00c016008401e006009801c006001801807e0060298000c000401e006007801c0060018018074020c000400e00f003800c00b003010c000802180020070018006006019801805e0003000400600580180760060138000800c00b00330134805200c400e00300080330004006005801a4001801a410112f58000801c00600901260008019806a40118002007001800600690404a75ee01e00060008018046000801801e000300c4832004c025201430094800a0030028052003002c00d2002c000300648010c0092002300748028c0312000300b48018c0292012300948008c0212066801a40018000c0192008300a2233335573e00250002801994004d55ce800cd55cf0008d5d08014c00cd5d10011263009222532900389800a4d2219002912c80344c01526910c80148964cc04cdd68010034564cc03801400626601800e0071801226601800e01518010096400a3000910c008600444002600244004a664600200244246466004460044460040064600444600200646a660080080066a00600224446600644b20051800484ccc02600244666ae68cdc3801000c00200500a91199ab9a33710004003000801488ccd5cd19b89002001800400a44666ae68cdc4801000c00a00122333573466e20008006005000912a999ab9a3371200400222002220052255333573466e2400800444008440040026eb400a42660080026eb000a4264666015001229002914801c8954ccd5cd19b8700400211333573466e1c00c006001002118011229002914801c88cc044cdc100200099b82002003245200522900391199ab9a3371066e08010004cdc1001001c002004403245200522900391199ab9a3371266e08010004cdc1001001c00a00048a400a45200722333573466e20cdc100200099b820020038014000912c99807001000c40062004912c99807001000c400a2002001199919ab9a357466ae880048cc028dd69aba1003375a6ae84008d5d1000934000dd60010a40064666ae68d5d1800c0020052225933006003357420031330050023574400318010600a444aa666ae68cdc3a400000222c22aa666ae68cdc4000a4000226600666e05200000233702900000088994004cdc2001800ccdc20010008cc010008004c01088954ccd5cd19b87480000044400844cc00c004cdc300100091119803112c800c60012219002911919806912c800c4c02401a442b26600a004019130040018c008002590028c804c8888888800d1900991111111002a244b267201722222222008001000c600518000001112a999ab9a3370e004002230001155333573466e240080044600823002229002914801c88ccd5cd19b893370400800266e0800800e00100208c8c0040048c0088cc008008005'; switch (actionType) { case 'update-committee': specificFields = `<div class="space-y-4"><div><h4 class="text-md font-semibold text-gray-200 mb-2">Members to Remove</h4><div id="remove-members-container" class="space-y-2"></div><button type="button" id="add-remove-member-btn" class="mt-2 text-sm text-orange-400 hover:underline">+ Add member to remove</button></div><hr class="border-blue-700/50"><div><h4 class="text-md font-semibold text-gray-200 mb-2">Members to Add</h4><div id="add-members-container" class="space-y-2"></div><button type="button" id="add-add-member-btn" class="mt-2 text-sm text-orange-400 hover:underline">+ Add member to add</button></div><hr class="border-blue-700/50"><div><h4 class="text-md font-semibold text-gray-200 mb-2">New Threshold</h4><input type="text" name="newThreshold" class="${inputClasses}" placeholder="New Threshold (e.g., 0.6)"></div></div>`; break; case 'new-constitution': specificFields = `<input type="url" name="constitutionUrl" required class="${inputClasses}" placeholder="URL of new constitution text"><input type="text" name="constitutionFile" required class="${inputClasses}" placeholder="Local path to constitution file (for hashing)">
+        const getStep1HTML = () => `<div id="step-1" class="step pb-12"><div><h3 class="text-xl font-semibold mb-4">Create Proposal Metadata</h3><form id="metadata-form" class="space-y-4"><input type="text" name="title" class="w-full input-styled rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Proposal Title (max 80 chars)"><textarea name="abstract" rows="3" class="w-full input-styled rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Abstract..."></textarea><textarea name="motivation" rows="4" class="w-full input-styled rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Motivation..."></textarea><textarea name="rationale" rows="4" class="w-full input-styled rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Rationale..."></textarea><input type="url" name="references" class="w-full input-styled rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Optional: URL to supporting document"><button type="button" id="generate-metadata-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Generate Metadata JSON</button></form><div id="metadata-output-container" class="hidden mt-4"><div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);"><div class="absolute top-2 right-2 flex space-x-2"><a id="download-json-btn" href="#" download="metadata.json" class="hidden bg-green-600 hover:bg-green-500 text-xs px-2 py-1 rounded text-white font-semibold">Download</a><button class="copy-btn bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button></div><pre><code class="language-json"></code></pre></div></div></div></div>`;
+        const getStep2HTML = () => `<div id="step-2" class="step pb-12"><div><h3 class="text-xl font-semibold mb-4">Host Metadata on IPFS</h3><div class="input-styled rounded-lg px-4 py-3 space-y-3"><p>You must now host the generated JSON file on an immutable file storage service like IPFS.</p><ol class="list-decimal list-inside space-y-2"><li>Copy the JSON from Step 1 and save it as a file (e.g., <code>metadata.json</code>).</li><li>Upload this file to an IPFS provider.</li><li>Once uploaded, you will get a URL. You will need this for the next step.</li></ol><p class="font-semibold">Recommended IPFS Web Uploaders:</p><div class="flex space-x-4"><a href="https://web3.storage/" target="_blank" class="text-orange-400 hover:underline">web3.storage</a><a href="https://nft.storage/" target="_blank" class="text-orange-400 hover:underline">NFT.storage</a><a href="https://infura.io/product/ipfs" target="_blank" class="text-orange-400 hover:underline">Infura IPFS</a></div></div></div></div>`;
+        const getStep3HTML = (actionType) => { let specificFields = ''; const inputClasses = "w-full input-styled rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus-ring-accent"; const existingGuardrailHash = '5908545908510101003232323232323232323232323232323232323232323232323232323232323232323232323232323232259323255333573466e1d20000011180098111bab357426ae88d55cf00104554ccd5cd19b87480100044600422c6aae74004dd51aba1357446ae88d55cf1baa3255333573466e1d200a35573a002226ae84d5d11aab9e00111637546ae84d5d11aba235573c6ea800642b26006003149a2c8a4c301f801c0052000c00e0070018016006901e4070c00e003000c00d20d00fc000c0003003800a4005801c00e003002c00d20c09a0c80e1801c006001801a4101b5881380018000600700148013003801c006005801a410100078001801c006001801a4101001f8001800060070014801b0038018096007001800600690404002600060001801c0052008c00e006025801c006001801a41209d8001800060070014802b003801c006005801a410112f501c3003800c00300348202b7881300030000c00e00290066007003800c00b003482032ad7b806038403060070014803b00380180960003003800a4021801c00e003002c00d20f40380e1801c006001801a41403f800100a0c00e0029009600f0030078040c00e002900a600f003800c00b003301a483403e01a600700180060066034904801e00060001801c0052016c01e00600f801c006001801980c2402900e30000c00e002901060070030128060c00e00290116007003800c00b003483c0ba03860070018006006906432e00040283003800a40498003003800a404d802c00e00f003800c00b003301a480cb0003003800c003003301a4802b00030001801c01e0070018016006603490605c016000600700180060066034904827600060030000c00e0029014600b003801c00c04b003800c00300348203a2489b00030001801c00e006025801c006001801a4101b11dc2df80018000c0003003800a4055802c00e007003012c00e003000c00d2080b8b872c000c0006007003801809600700180060069040607e4155016000600030000c00e00290166007003012c00e003000c00d2080c001c000c0003003800a405d801c00e003002c00d20c80180e1801c006001801a412007800100a0c00e00290186007003013c0006007001480cb005801801e006003801800e00600500403003800a4069802c00c00f003001c00c007003803c00e003002c00c05300333023480692028c0004014c00c00b003003c00c00f003003c00e00f003800c00b00301480590052008003003800a406d801c00e003002c00d2000c00d2006c00060070018006006900a600060001801c0052038c00e007001801600690006006901260003003800c003003483281300020141801c005203ac00e006027801c006001801a403d800180006007001480f3003801804e00700180060069040404af3c4e302600060001801c005203ec00e006013801c006001801a4101416f0fd20b80018000600700148103003801c006005801a403501c3003800c0030034812b00030000c00e0029021600f003800c00a01ac00e003000c00ccc08d20d00f4800b00030000c0000000000803c00c016008401e006009801c006001801807e0060298000c000401e006007801c0060018018074020c000400e00f003800c00b003010c000802180020070018006006019801805e0003000400600580180760060138000800c00b00330134805200c400e00300080330004006005801a4001801a410112f58000801c00600901260008019806a40118002007001800600690404a75ee01e00060008018046000801801e000300c4832004c025201430094800a0030028052003002c00d2002c000300648010c0092002300748028c0312000300b48018c0292012300948008c0212066801a40018000c0192008300a2233335573e00250002801994004d55ce800cd55cf0008d5d08014c00cd5d10011263009222532900389800a4d2219002912c80344c01526910c80148964cc04cdd68010034564cc03801400626601800e0071801226601800e01518010096400a3000910c008600444002600244004a664600200244246466004460044460040064600444600200646a660080080066a00600224446600644b20051800484ccc02600244666ae68cdc3801000c00200500a91199ab9a33710004003000801488ccd5cd19b89002001800400a44666ae68cdc4801000c00a00122333573466e20008006005000912a999ab9a3371200400222002220052255333573466e2400800444008440040026eb400a42660080026eb000a4264666015001229002914801c8954ccd5cd19b8700400211333573466e1c00c006001002118011229002914801c88cc044cdc100200099b82002003245200522900391199ab9a3371066e08010004cdc1001001c002004403245200522900391199ab9a3371266e08010004cdc1001001c00a00048a400a45200722333573466e20cdc100200099b820020038014000912c99807001000c40062004912c99807001000c400a2002001199919ab9a357466ae880048cc028dd69aba1003375a6ae84008d5d1000934000dd60010a40064666ae68d5d1800c0020052225933006003357420031330050023574400318010600a444aa666ae68cdc3a400000222c22aa666ae68cdc4000a4000226600666e05200000233702900000088994004cdc2001800ccdc20010008cc010008004c01088954ccd5cd19b87480000044400844cc00c004cdc300100091119803112c800c60012219002911919806912c800c4c02401a442b26600a004019130040018c008002590028c804c8888888800d1900991111111002a244b267201722222222008001000c600518000001112a999ab9a3370e004002230001155333573466e240080044600823002229002914801c88ccd5cd19b893370400800266e0800800e00100208c8c0040048c0088cc008008005'; switch (actionType) { case 'update-committee': specificFields = `<div class="space-y-4"><div><h4 class="text-md font-semibold mb-2">Members to Remove</h4><div id="remove-members-container" class="space-y-2"></div><button type="button" id="add-remove-member-btn" class="mt-2 text-sm text-orange-400 hover:underline">+ Add member to remove</button></div><hr class="border-white/10"><div><h4 class="text-md font-semibold mb-2">Members to Add</h4><div id="add-members-container" class="space-y-2"></div><button type="button" id="add-add-member-btn" class="mt-2 text-sm text-orange-400 hover:underline">+ Add member to add</button></div><hr class="border-white/10"><div><h4 class="text-md font-semibold mb-2">New Threshold</h4><input type="text" name="newThreshold" class="${inputClasses}" placeholder="New Threshold (e.g., 0.6)"></div></div>`; break; case 'new-constitution': specificFields = `<input type="url" name="constitutionUrl" required class="${inputClasses}" placeholder="URL of new constitution text"><input type="text" name="constitutionFile" required class="${inputClasses}" placeholder="Local path to constitution file (for hashing)">
         <div class="space-y-2 pt-2">
-            <h4 class="text-md font-semibold text-gray-200">Guardrail Script Hash</h4>
+            <h4 class="text-md font-semibold">Guardrail Script Hash</h4>
             <div class="space-y-3">
                 <div class="flex items-center">
                     <input id="guardrail-existing" name="guardrailOption" type="radio" value="existing" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500" checked>
-                    <label for="guardrail-existing" class="ml-3 block text-sm font-medium text-gray-300">Use Existing Guardrail Hash</label>
+                    <label for="guardrail-existing" class="ml-3 block text-sm font-medium">Use Existing Guardrail Hash</label>
                 </div>
                 <div class="flex items-center">
                     <input id="guardrail-new" name="guardrailOption" type="radio" value="new" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500">
-                    <label for="guardrail-new" class="ml-3 block text-sm font-medium text-gray-300">Enter New Guardrail Hash</label>
+                    <label for="guardrail-new" class="ml-3 block text-sm font-medium">Enter New Guardrail Hash</label>
                 </div>
                 <div class="flex items-center">
                     <input id="guardrail-empty" name="guardrailOption" type="radio" value="empty" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500">
-                    <label for="guardrail-empty" class="ml-3 block text-sm font-medium text-gray-300">Leave Empty (Advanced)</label>
+                    <label for="guardrail-empty" class="ml-3 block text-sm font-medium">Leave Empty (Advanced)</label>
                 </div>
             </div>
             <input type="text" id="guardrailScriptHash-input" name="guardrailScriptHash" class="${inputClasses} mt-2" value="${existingGuardrailHash}" readonly>
-            <p id="guardrail-warning" class="hidden text-sm text-yellow-400 mt-1">Warning: Leaving this empty will result in a constitution with NO guardrail script. This is an advanced option. Ensure you understand the consequences.</p>
+            <p id="guardrail-warning" class="hidden text-sm text-yellow-400 mt-1"><strong>Warning:</strong> Leaving this empty will result in a constitution with NO guardrail script. This is an advanced option. Ensure you understand the consequences.</p>
         </div>
-        `; break; case 'hard-fork': specificFields = `<div class="flex gap-4"><input type="number" name="majorVer" required class="w-1/2 ${inputClasses}" placeholder="Major Version"><input type="number" name="minorVer" required class="w-1/2 ${inputClasses}" placeholder="Minor Version"></div>`; break; case 'parameter-change': specificFields = `<div class="flex gap-4"><input type="text" name="paramKey" required class="w-1/2 ${inputClasses}" placeholder="Parameter Key (e.g., txFeePerByte)"><input type="text" name="paramValue" required class="w-1/2 ${inputClasses}" placeholder="New Value"></div>`; break; case 'treasury-withdrawal': specificFields = `<div id="withdrawal-recipients-container" class="space-y-2"><div class="flex gap-4 withdrawal-recipient"><input type="text" name="recipientAddr1" required class="w-2/3 ${inputClasses}" placeholder="Recipient Reward Address (bech32)"><input type="number" name="recipientAmount1" required class="w-1/3 ${inputClasses}" placeholder="Amount (ADA)"></div></div><button type="button" id="add-recipient-btn" class="text-sm text-orange-400 hover:underline">+ Add another recipient</button>`; break; } const needsPrevGovId = !['treasury-withdrawal', 'info'].includes(actionType); const prevGovIdField = needsPrevGovId ? `<input type="text" name="prevGovActionId" class="${inputClasses}" placeholder="Previous Gov Action ID (tx_hash#ix)">` : ''; return `<div id="step-3" class="step"><h3 class="text-xl font-semibold text-white mb-4">Step 3: Build Transaction Command</h3><p class="text-gray-300 mb-4 -mt-2 text-sm">This generates the command to create the governance action file. You will still need to build, sign, and submit the final transaction.</p><form id="transaction-form" class="space-y-4"><input type="url" name="metadataUrl" required class="${inputClasses}" placeholder="Paste Metadata URL from Step 2 here"><input type="text" name="depositAddress" required class="${inputClasses}" placeholder="Your Deposit Return Address (stake key file name)">${prevGovIdField}${specificFields}<button type="button" id="build-transaction-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Build Transaction Command</button></form><div id="transaction-output-container" class="hidden mt-4"><div class="relative bg-black/30 p-4 rounded-lg"><button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button><pre><code id="transaction-output"></code></pre></div></div></div>`; };
+        `; break; case 'hard-fork': specificFields = `<div class="flex gap-4"><input type="number" name="majorVer" required class="w-1/2 ${inputClasses}" placeholder="Major Version"><input type="number" name="minorVer" required class="w-1/2 ${inputClasses}" placeholder="Minor Version"></div>`; break; case 'parameter-change': specificFields = `<div class="flex gap-4"><input type="text" name="paramKey" required class="w-1/2 ${inputClasses}" placeholder="Parameter Key (e.g., txFeePerByte)"><input type="text" name="paramValue" required class="w-1/2 ${inputClasses}" placeholder="New Value"></div>`; break; case 'treasury-withdrawal': specificFields = `<div id="withdrawal-recipients-container" class="space-y-2"><div class="flex gap-4 withdrawal-recipient"><input type="text" name="recipientAddr1" required class="w-2/3 ${inputClasses}" placeholder="Recipient Reward Address (bech32)"><input type="number" name="recipientAmount1" required class="w-1/3 ${inputClasses}" placeholder="Amount (ADA)"></div></div><button type="button" id="add-recipient-btn" class="text-sm text-orange-400 hover:underline">+ Add another recipient</button>`; break; } const needsPrevGovId = !['treasury-withdrawal', 'info', 'new-constitution'].includes(actionType); const prevGovIdField = needsPrevGovId ? `<input type="text" name="prevGovActionId" class="${inputClasses}" placeholder="Previous Gov Action ID (tx_hash#ix)">` : ''; return `<div id="step-3" class="step"><div><h3 class="text-xl font-semibold mb-4">Build Transaction Command</h3><p class="text-gray-300 mb-4 -mt-2 text-sm">This generates the command to create the governance action file. You will still need to build, sign, and submit the final transaction.</p><form id="transaction-form" class="space-y-4"><input type="url" name="metadataUrl" required class="${inputClasses}" placeholder="Paste Metadata URL from Step 2 here"><input type="text" name="depositAddress" required class="${inputClasses}" placeholder="Your Deposit Return Address (stake key file name)">${prevGovIdField}${specificFields}<button type="button" id="build-transaction-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Build Transaction Command</button></form><div id="transaction-output-container" class="hidden mt-4"><div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);"><button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button><pre><code id="transaction-output"></code></pre></div></div></div></div>`; };
         
         createProposalButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -780,7 +848,6 @@
 
                 document.getElementById('generate-metadata-btn').addEventListener('click', generateMetadata);
                 document.getElementById('build-transaction-btn').addEventListener('click', buildTransaction);
-                modalBody.querySelectorAll('.copy-btn').forEach(btn => { btn.addEventListener('click', (ev) => { const codeElement = ev.target.closest('.relative').querySelector('code'); copyToClipboard(codeElement.textContent, ev.target); }); });
                 
                 if (currentActionType === 'treasury-withdrawal') {
                     let recipientCount = 1;
@@ -791,14 +858,14 @@
                             const container = document.getElementById('withdrawal-recipients-container'); 
                             const newRecipient = document.createElement('div'); 
                             newRecipient.className = 'flex gap-4 withdrawal-recipient'; 
-                            newRecipient.innerHTML = `<input type="text" name="recipientAddr${recipientCount}" required class="w-2/3 bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2" placeholder="Recipient Reward Address ${recipientCount}"><input type="number" name="recipientAmount${recipientCount}" required class="w-1/3 bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2" placeholder="Amount (ADA)">`; 
+                            newRecipient.innerHTML = `<input type="text" name="recipientAddr${recipientCount}" required class="w-2/3 input-styled rounded-lg px-4 py-2" placeholder="Recipient Reward Address ${recipientCount}"><input type="number" name="recipientAmount${recipientCount}" required class="w-1/3 input-styled rounded-lg px-4 py-2" placeholder="Amount (ADA)">`; 
                             container.appendChild(newRecipient); 
                         });
                     }
                 }
                 
                 if (currentActionType === 'update-committee') {
-                    const inputClasses = "w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent";
+                    const inputClasses = "w-full input-styled rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus-ring-accent";
                     const removeContainer = document.getElementById('remove-members-container');
                     const addContainer = document.getElementById('add-members-container');
 
@@ -807,7 +874,7 @@
                         newRemoveMember.className = 'flex items-center gap-2 dynamic-row';
                         newRemoveMember.innerHTML = `
                             <input type="text" name="removeMemberVkey" class="${inputClasses}" placeholder="Cold VKey file name to remove">
-                            <button type="button" class="remove-row-btn text-red-400 hover:text-white font-bold text-xl p-1 leading-none">&times;</button>
+                            <button type="button" class="remove-row-btn text-red-400 hover:text-red-600 font-bold text-xl p-1 leading-none">&times;</button>
                         `;
                         removeContainer.appendChild(newRemoveMember);
                     });
@@ -818,38 +885,38 @@
                         newAddMember.innerHTML = `
                             <input type="text" name="addMemberVkey" class="flex-grow ${inputClasses}" placeholder="Cold VKey file name to add">
                             <input type="number" name="addMemberEpoch" class="w-1/3 ${inputClasses}" placeholder="Term Epoch">
-                            <button type="button" class="remove-row-btn text-red-400 hover:text-white font-bold text-xl p-1 leading-none">&times;</button>
+                            <button type="button" class="remove-row-btn text-red-400 hover:text-red-600 font-bold text-xl p-1 leading-none">&times;</button>
                         `;
                         addContainer.appendChild(newAddMember);
                     });
                 }
                 
                  if (currentActionType === 'new-constitution') {
-                    const hashInput = document.getElementById('guardrailScriptHash-input');
-                    const warning = document.getElementById('guardrail-warning');
-                    const existingGuardrailHash = '5908545908510101003232323232323232323232323232323232323232323232323232323232323232323232323232323232259323255333573466e1d20000011180098111bab357426ae88d55cf00104554ccd5cd19b87480100044600422c6aae74004dd51aba1357446ae88d55cf1baa3255333573466e1d200a35573a002226ae84d5d11aab9e00111637546ae84d5d11aba235573c6ea800642b26006003149a2c8a4c301f801c0052000c00e0070018016006901e4070c00e003000c00d20d00fc000c0003003800a4005801c00e003002c00d20c09a0c80e1801c006001801a4101b5881380018000600700148013003801c006005801a410100078001801c006001801a4101001f8001800060070014801b0038018096007001800600690404002600060001801c0052008c00e006025801c006001801a41209d8001800060070014802b003801c006005801a410112f501c3003800c00300348202b7881300030000c00e00290066007003800c00b003482032ad7b806038403060070014803b00380180960003003800a4021801c00e003002c00d20f40380e1801c006001801a41403f800100a0c00e0029009600f0030078040c00e002900a600f003800c00b003301a483403e01a600700180060066034904801e00060001801c0052016c01e00600f801c006001801980c2402900e30000c00e002901060070030128060c00e00290116007003800c00b003483c0ba03860070018006006906432e00040283003800a40498003003800a404d802c00e00f003800c00b003301a480cb0003003800c003003301a4802b00030001801c01e0070018016006603490605c016000600700180060066034904827600060030000c00e0029014600b003801c00c04b003800c00300348203a2489b00030001801c00e006025801c006001801a4101b11dc2df80018000c0003003800a4055802c00e007003012c00e003000c00d2080b8b872c000c0006007003801809600700180060069040607e4155016000600030000c00e00290166007003012c00e003000c00d2080c001c000c0003003800a405d801c00e003002c00d20c80180e1801c006001801a412007800100a0c00e00290186007003013c0006007001480cb005801801e006003801800e00600500403003800a4069802c00c00f003001c00c007003803c00e003002c00c05300333023480692028c0004014c00c00b003003c00c00f003003c00e00f003800c00b00301480590052008003003800a406d801c00e003002c00d2000c00d2006c00060070018006006900a600060001801c0052038c00e007001801600690006006901260003003800c003003483281300020141801c005203ac00e006027801c006001801a403d800180006007001480f3003801804e00700180060069040404af3c4e302600060001801c005203ec00e006013801c006001801a4101416f0fd20b80018000600700148103003801c006005801a403501c3003800c0030034812b00030000c00e0029021600f003800c00a01ac00e003000c00ccc08d20d00f4800b00030000c0000000000803c00c016008401e006009801c006001801807e0060298000c000401e006007801c0060018018074020c000400e00f003800c00b003010c000802180020070018006006019801805e0003000400600580180760060138000800c00b00330134805200c400e00300080330004006005801a4001801a410112f58000801c00600901260008019806a40118002007001800600690404a75ee01e00060008018046000801801e000300c4832004c025201430094800a0030028052003002c00d2002c000300648010c0092002300748028c0312000300b48018c0292012300948008c0212066801a40018000c0192008300a2233335573e00250002801994004d55ce800cd55cf0008d5d08014c00cd5d10011263009222532900389800a4d2219002912c80344c01526910c80148964cc04cdd68010034564cc03801400626601800e0071801226601800e01518010096400a3000910c008600444002600244004a664600200244246466004460044460040064600444600200646a660080080066a00600224446600644b20051800484ccc02600244666ae68cdc3801000c00200500a91199ab9a33710004003000801488ccd5cd19b89002001800400a44666ae68cdc4801000c00a00122333573466e20008006005000912a999ab9a3371200400222002220052255333573466e2400800444008440040026eb400a42660080026eb000a4264666015001229002914801c8954ccd5cd19b8700400211333573466e1c00c006001002118011229002914801c88cc044cdc100200099b82002003245200522900391199ab9a3371066e08010004cdc1001001c002004403245200522900391199ab9a3371266e08010004cdc1001001c00a00048a400a45200722333573466e20cdc100200099b820020038014000912c99807001000c40062004912c99807001000c400a2002001199919ab9a357466ae880048cc028dd69aba1003375a6ae84008d5d1000934000dd60010a40064666ae68d5d1800c0020052225933006003357420031330050023574400318010600a444aa666ae68cdc3a400000222c22aa666ae68cdc4000a4000226600666e05200000233702900000088994004cdc2001800ccdc20010008cc010008004c01088954ccd5cd19b87480000044400844cc00c004cdc300100091119803112c800c60012219002911919806912c800c4c02401a442b26600a004019130040018c008002590028c804c8888888800d1900991111111002a244b267201722222222008001000c600518000001112a999ab9a3370e004002230001155333573466e240080044600823002229002914801c88ccd5cd19b893370400800266e0800800e00100208c8c0040048c0088cc008008005';
-                    document.querySelectorAll('input[name="guardrailOption"]').forEach(radio => {
-                        radio.addEventListener('change', (e) => {
-                            warning.classList.add('hidden');
-                            switch (e.target.value) {
-                                case 'existing':
-                                    hashInput.value = existingGuardrailHash;
-                                    hashInput.readOnly = true;
-                                    break;
-                                case 'new':
-                                    hashInput.value = '';
-                                    hashInput.readOnly = false;
-                                    hashInput.placeholder = 'Enter new guardrail script hash';
-                                    break;
-                                case 'empty':
-                                    hashInput.value = '';
-                                    hashInput.readOnly = true;
-                                    warning.classList.remove('hidden');
-                                    break;
-                            }
-                        });
-                    });
-                }
+                     const hashInput = document.getElementById('guardrailScriptHash-input');
+                     const warning = document.getElementById('guardrail-warning');
+                     const existingHash = hashInput.value;
+                     document.querySelectorAll('input[name="guardrailOption"]').forEach(radio => {
+                         radio.addEventListener('change', (e) => {
+                             warning.classList.add('hidden');
+                             switch (e.target.value) {
+                                 case 'existing':
+                                     hashInput.value = existingHash;
+                                     hashInput.readOnly = true;
+                                     break;
+                                 case 'new':
+                                     hashInput.value = '';
+                                     hashInput.readOnly = false;
+                                     hashInput.placeholder = 'Enter new guardrail script hash';
+                                     break;
+                                 case 'empty':
+                                     hashInput.value = '';
+                                     hashInput.readOnly = true;
+                                     warning.classList.remove('hidden');
+                                     break;
+                             }
+                         });
+                     });
+                 }
             });
         });
 
@@ -870,63 +937,88 @@
                 }
             }
              if (e.target && e.target.classList.contains('copy-btn')) {
-                const codeElement = e.target.closest('.relative').querySelector('code');
-                copyToClipboard(codeElement.textContent, e.target);
-            }
+                 const codeElement = e.target.closest('.relative').querySelector('code');
+                 copyToClipboard(codeElement.innerText, e.target);
+             }
         });
 
         if (modal) {
              modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.add('hidden');
-                }
-            });
+                 if (e.target === modal) {
+                     modal.classList.add('hidden');
+                 }
+             });
         }
 
         // --- EXAMPLES PAGE LOGIC ---
         const accordionContainer = document.getElementById('examples-accordion');
 
+        const renderExamples = () => {
+            if(!accordionContainer) return;
+            accordionContainer.innerHTML = '';
+            const orderedTitles = [
+                'New Constitution',
+                'Hard Fork Initiation',
+                'Protocol Parameters',
+                'Treasury Withdrawal',
+                'Motion of No-Confidence',
+                'Update Committee / Threshold',
+                'Info Action'
+            ];
+
+            orderedTitles.forEach(title => {
+                if (examplesData[title]) {
+                    const data = JSON.parse(JSON.stringify(examplesData[title]));
+                    data.action = data.action.replace(/##NETWORK##/g, currentNetwork);
+                    data.build = data.build.replace(/##NETWORK##/g, currentNetwork);
+                    data.sign = data.sign.replace(/##NETWORK##/g, currentNetwork);
+                    data.submit = data.submit.replace(/##NETWORK##/g, currentNetwork);
+                    accordionContainer.innerHTML += createExampleHTML(title, data);
+                }
+            });
+        };
+
         const createExampleHTML = (title, data) => {
             return `
-                <div class="rounded-lg overflow-hidden border border-blue-800/50">
-                    <button class="accordion-button w-full text-left p-4 bg-blue-900/50 hover:bg-blue-900/70 transition-colors flex justify-between items-center">
+                <div class="card-bg rounded-lg overflow-hidden">
+                    <button class="accordion-button w-full text-left p-4 hover:bg-white/5 transition-colors flex justify-between items-center">
                         <span class="text-xl font-bold">${title}</span>
                         <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="accordion-content">
-                        <div class="p-6 space-y-6">
+                        <div class="p-6 space-y-6 border-t border-white/10">
                             <div>
-                                <h4 class="font-semibold text-lg mb-2 text-orange-300">Metadata JSON</h4>
-                                <div class="relative bg-black/30 p-4 rounded-lg">
-                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                <h4 class="font-semibold text-lg mb-2 text-accent">Metadata JSON</h4>
+                                <div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button>
                                     <pre><code class="language-json">${data.metadata}</code></pre>
                                 </div>
                             </div>
                              <div>
-                                <h4 class="font-semibold text-lg mb-2 text-orange-300">1. Create Action File</h4>
-                                <div class="relative bg-black/30 p-4 rounded-lg">
-                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                <h4 class="font-semibold text-lg mb-2 text-accent">1. Create Action File</h4>
+                                <div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button>
                                     <pre><code class="language-bash">${data.action}</code></pre>
                                 </div>
                             </div>
                              <div>
-                                <h4 class="font-semibold text-lg mb-2 text-orange-300">2. Build Transaction</h4>
-                                <div class="relative bg-black/30 p-4 rounded-lg">
-                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                <h4 class="font-semibold text-lg mb-2 text-accent">2. Build Transaction</h4>
+                                <div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button>
                                     <pre><code class="language-bash">${data.build}</code></pre>
                                 </div>
                             </div>
                              <div>
-                                <h4 class="font-semibold text-lg mb-2 text-orange-300">3. Sign Transaction</h4>
-                                <div class="relative bg-black/30 p-4 rounded-lg">
-                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                <h4 class="font-semibold text-lg mb-2 text-accent">3. Sign Transaction</h4>
+                                <div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button>
                                     <pre><code class="language-bash">${data.sign}</code></pre>
                                 </div>
                             </div>
                              <div>
-                                <h4 class="font-semibold text-lg mb-2 text-orange-300">4. Submit Transaction</h4>
-                                <div class="relative bg-black/30 p-4 rounded-lg">
-                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                <h4 class="font-semibold text-lg mb-2 text-accent">4. Submit Transaction</h4>
+                                <div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button>
                                     <pre><code class="language-bash">${data.submit}</code></pre>
                                 </div>
                             </div>
@@ -936,48 +1028,79 @@
             `;
         };
         
-        // Populate examples - ensuring order matches the main page
-        const orderedTitles = [
-            'New Constitution',
-            'Hard Fork Initiation',
-            'Protocol Parameters',
-            'Treasury Withdrawal',
-            'Motion of No-Confidence',
-            'Update Committee / Threshold',
-            'Info Action'
-        ];
-
-        orderedTitles.forEach(title => {
-            if (examplesData[title]) {
-                accordionContainer.innerHTML += createExampleHTML(title, examplesData[title]);
-            }
-        });
-        
         // Accordion click listener
-        accordionContainer.addEventListener('click', (e) => {
-            const button = e.target.closest('.accordion-button');
-            if (!button) return;
+        if (accordionContainer) {
+            accordionContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('.accordion-button');
+                if (!button) return;
 
-            const content = button.nextElementSibling;
-            const icon = button.querySelector('svg');
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('svg');
 
-            // Close all other accordions
-            accordionContainer.querySelectorAll('.accordion-button').forEach(otherButton => {
-                if (otherButton !== button) {
-                    otherButton.nextElementSibling.style.maxHeight = null;
-                    otherButton.querySelector('svg').classList.remove('rotate-180');
+                const isExpanded = content.style.maxHeight;
+
+                // Close all other accordions
+                accordionContainer.querySelectorAll('.accordion-content').forEach(otherContent => {
+                    otherContent.style.maxHeight = null;
+                });
+                accordionContainer.querySelectorAll('.accordion-button svg').forEach(otherIcon => {
+                    otherIcon.classList.remove('rotate-180');
+                });
+
+
+                // Toggle current accordion
+                if (isExpanded) {
+                    content.style.maxHeight = null;
+                    icon.classList.remove('rotate-180');
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    icon.classList.add('rotate-180');
                 }
             });
+        }
 
-            // Toggle current accordion
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-                icon.classList.remove('rotate-180');
+
+        // --- SCROLL LOGIC FOR HEADER ---
+        let lastScrollTop = 0;
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > header.offsetHeight) {
+                // Downscroll
+                header.classList.add('header-hidden');
             } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-                icon.classList.add('rotate-180');
+                // Upscroll
+                header.classList.remove('header-hidden');
             }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+        }, false);
+
+        // --- THEME TOGGLE LOGIC ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+
+        const applyTheme = (theme) => {
+            if (theme === 'light') {
+                document.body.classList.add('light-mode');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.body.classList.remove('light-mode');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
         });
+
+        // Apply theme on initial load
+        applyTheme(localStorage.getItem('theme') || 'dark');
 
     </script>
 </body>
