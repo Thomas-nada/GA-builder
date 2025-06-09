@@ -10,6 +10,8 @@ A web-based tool designed to simplify the process of creating on-chain governanc
 * **Step-by-Step Guidance:** Breaks down the complex process of creating a governance action into simple, manageable steps.  
 * **Metadata Generation:** Automatically generates the required CIP-108 compliant JSON metadata for your proposal.  
 * **Command Generation:** Produces the exact cardano-cli conway commands needed to build and submit your governance action on-chain.  
+* **Network Selection:** Easily toggle between Mainnet, Pre-Production, Preview, and SanchoNet to generate the correct commands for your target environment.
+* **Theme Toggle:** Switch between a sleek dark mode and a clean light mode for your viewing preference.
 * **In-depth Guide:** A dedicated page explaining the fundamentals of Cardano governance, the roles of different voting bodies (DReps, SPOs, CC), and best practices for writing a high-quality proposal.  
 * **Complete Examples:** A library of detailed, end-to-end examples for each governance action type, from metadata to final transaction submission.  
 * **User-Friendly Interface:** A clean, responsive design with clear instructions and helpful UI elements like dynamic forms and copy-to-clipboard buttons.
