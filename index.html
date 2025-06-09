@@ -247,7 +247,7 @@
             <section class="text-center pt-10 md:pt-20 pb-10">
                 <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Create On-Chain Governance Actions</h1>
                 <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-                    A step-by-step tool to generate the metadata and transaction commands for all seven Cardano governance action types.
+                    A step-by-step tool to generate the metadata and transaction commands for Cardano governance actions.
                 </p>
             </section>
 
@@ -286,7 +286,7 @@
                     </div>
                     <div class="card-bg rounded-xl p-6 flex flex-col hover:border-orange-400 transition-all duration-300">
                         <h3 class="text-xl font-bold mb-2">Info Action</h3>
-                        <p class="text-gray-300 mb-4 flex-grow">A non-binding action with no direct on-chain effect. It is used to gauge community sentiment, conduct polls, or signal intent for future proposals.</p>
+                        <p class="text-gray-300 mb-4 flex-grow">A non-binding action with no direct on-chain effect. It is used to gauge community sentiment, conduct polls, or signal intent for future proposals, including proposing budgets or treasury limits.</p>
                          <button class="create-proposal-btn btn-primary mt-auto w-full text-center py-2 rounded-lg font-semibold transition-colors" data-action-type="info" data-action-name="Info Action">Create Proposal</button>
                     </div>
                 </div>
@@ -837,7 +837,23 @@
             <input type="text" id="guardrailScriptHash-input" name="guardrailScriptHash" class="${inputClasses} mt-2" value="${existingGuardrailHash}" readonly>
             <p id="guardrail-warning" class="hidden text-sm text-yellow-400 mt-1"><strong>Warning:</strong> Leaving this empty will result in a constitution with NO guardrail script. This is an advanced option. Ensure you understand the consequences.</p>
         </div>
-        `; break; case 'hard-fork': specificFields = `<div class="flex gap-4"><input type="number" name="majorVer" required class="w-1/2 ${inputClasses}" placeholder="Major Version"><input type="number" name="minorVer" required class="w-1/2 ${inputClasses}" placeholder="Minor Version"></div>`; break; case 'parameter-change': specificFields = `<div class="flex gap-4"><input type="text" name="paramKey" required class="w-1/2 ${inputClasses}" placeholder="Parameter Key (e.g., txFeePerByte)"><input type="text" name="paramValue" required class="w-1/2 ${inputClasses}" placeholder="New Value"></div>`; break; case 'treasury-withdrawal': specificFields = `<div id="withdrawal-recipients-container" class="space-y-2"><div class="flex gap-4 withdrawal-recipient"><input type="text" name="recipientAddr1" required class="w-2/3 ${inputClasses}" placeholder="Recipient Reward Address (bech32)"><input type="number" name="recipientAmount1" required class="w-1/3 ${inputClasses}" placeholder="Amount (ADA)"></div></div><button type="button" id="add-recipient-btn" class="text-sm text-orange-400 hover:underline">+ Add another recipient</button>`; break; } const needsPrevGovId = !['treasury-withdrawal', 'info', 'new-constitution'].includes(actionType); const prevGovIdField = needsPrevGovId ? `<input type="text" name="prevGovActionId" class="${inputClasses}" placeholder="Previous Gov Action ID (tx_hash#ix)">` : ''; return `<div id="step-3" class="step"><div><h3 class="text-xl font-semibold mb-4">Build Transaction Command</h3><p class="text-gray-300 mb-4 -mt-2 text-sm">This generates the command to create the governance action file. You will still need to build, sign, and submit the final transaction.</p><form id="transaction-form" class="space-y-4"><input type="url" name="metadataUrl" required class="${inputClasses}" placeholder="Paste Metadata URL from Step 2 here"><input type="text" name="depositAddress" required class="${inputClasses}" placeholder="Your Deposit Return Address (stake key file name)">${prevGovIdField}${specificFields}<button type="button" id="build-transaction-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Build Transaction Command</button></form><div id="transaction-output-container" class="hidden mt-4"><div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);"><button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button><pre><code id="transaction-output"></code></pre></div></div></div></div>`; };
+        `; break; case 'hard-fork': specificFields = `<div class="flex gap-4"><input type="number" name="majorVer" required class="w-1/2 ${inputClasses}" placeholder="Major Version"><input type="number" name="minorVer" required class="w-1/2 ${inputClasses}" placeholder="Minor Version"></div>`; break; case 'parameter-change': specificFields = `<div class="flex gap-4"><input type="text" name="paramKey" required class="w-1/2 ${inputClasses}" placeholder="Parameter Key (e.g., txFeePerByte)"><input type="text" name="paramValue" required class="w-1/2 ${inputClasses}" placeholder="New Value"></div>`; break; case 'treasury-withdrawal': specificFields = `<div id="withdrawal-recipients-container" class="space-y-2"><div class="flex gap-4 withdrawal-recipient"><input type="text" name="recipientAddr1" required class="w-2/3 ${inputClasses}" placeholder="Recipient Reward Address (bech32)"><input type="number" name="recipientAmount1" required class="w-1/3 ${inputClasses}" placeholder="Amount (ADA)"></div></div><button type="button" id="add-recipient-btn" class="text-sm text-orange-400 hover:underline">+ Add another recipient</button>`; break; case 'info': specificFields = `<div class="space-y-4">
+            <label for="info-action-type" class="block text-sm font-medium">Purpose of this Info Action (Optional)</label>
+            <select id="info-action-type" name="infoActionType" class="${inputClasses}">
+                <option value="general">General Info Action</option>
+                <option value="budget">Budget</option>
+                <option value="ncl">Net Change Limit</option>
+            </select>
+            <div id="info-desc-general" class="p-3 text-sm rounded-lg" style="background-color: var(--input-bg);">
+                For a general poll, clearly state the question and any options in your metadata (e.g., in the Rationale section) to gauge community sentiment effectively.
+            </div>
+            <div id="info-desc-budget" class="hidden p-3 text-sm rounded-lg" style="background-color: var(--input-bg);">
+                <b>Guidance for Budget Proposals:</b> Your metadata should clearly define the budget's scope, the period it covers (e.g., 73 epochs), designated administrators, and an allocation for independent audits. This Info Action serves to get community approval before submitting withdrawals.
+            </div>
+            <div id="info-desc-ncl" class="hidden p-3 text-sm rounded-lg" style="background-color: var(--input-bg);">
+                <b>Guidance for Net Change Limit:</b> Use the metadata to propose a net change limit for the treasury. Clearly state the limit and the period it applies to.
+            </div>
+        </div>`; break; } const needsPrevGovId = !['treasury-withdrawal', 'info', 'new-constitution'].includes(actionType); const prevGovIdField = needsPrevGovId ? `<input type="text" name="prevGovActionId" class="${inputClasses}" placeholder="Previous Gov Action ID (tx_hash#ix)">` : ''; return `<div id="step-3" class="step"><div><h3 class="text-xl font-semibold mb-4">Build Transaction Command</h3><p class="text-gray-300 mb-4 -mt-2 text-sm">This generates the command to create the governance action file. You will still need to build, sign, and submit the final transaction.</p><form id="transaction-form" class="space-y-4"><input type="url" name="metadataUrl" required class="${inputClasses}" placeholder="Paste Metadata URL from Step 2 here"><input type="text" name="depositAddress" required class="${inputClasses}" placeholder="Your Deposit Return Address (stake key file name)">${prevGovIdField}${specificFields}<button type="button" id="build-transaction-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Build Transaction Command</button></form><div id="transaction-output-container" class="hidden mt-4"><div class="relative p-4 rounded-lg" style="background-color: var(--code-bg);"><button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold text-white">Copy</button><pre><code id="transaction-output"></code></pre></div></div></div></div>`; };
         
         createProposalButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -849,6 +865,29 @@
                 document.getElementById('generate-metadata-btn').addEventListener('click', generateMetadata);
                 document.getElementById('build-transaction-btn').addEventListener('click', buildTransaction);
                 
+                if (currentActionType === 'info') {
+                    const selector = document.getElementById('info-action-type');
+                    const generalDesc = document.getElementById('info-desc-general');
+                    const budgetDesc = document.getElementById('info-desc-budget');
+                    const nclDesc = document.getElementById('info-desc-ncl');
+                    
+                    if(selector){
+                        selector.addEventListener('change', (e) => {
+                            generalDesc.classList.add('hidden');
+                            budgetDesc.classList.add('hidden');
+                            nclDesc.classList.add('hidden');
+                            
+                            if (e.target.value === 'general') {
+                                generalDesc.classList.remove('hidden');
+                            } else if (e.target.value === 'budget') {
+                                budgetDesc.classList.remove('hidden');
+                            } else if (e.target.value === 'ncl') {
+                                nclDesc.classList.remove('hidden');
+                            }
+                        });
+                    }
+                }
+
                 if (currentActionType === 'treasury-withdrawal') {
                     let recipientCount = 1;
                     const addRecipientBtn = document.getElementById('add-recipient-btn');
