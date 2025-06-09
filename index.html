@@ -7,10 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
             --primary-orange: #d63f1e;
             --primary-blue: #0228aa;
             --light-text: #ffffff;
@@ -78,6 +78,55 @@
         .step-indicator .step.active:before {
             background-color: var(--primary-orange);
         }
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .nav-link.active {
+            background-color: var(--primary-orange);
+            font-weight: 600;
+        }
+        .nav-link:not(.active):hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 0 0 0.5rem 0.5rem;
+        }
+        #page-guide h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        #page-guide h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-orange);
+        }
+        #page-guide p, #page-guide li {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgb(209 213 219);
+        }
+         #page-guide ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        #page-guide .guide-section {
+            background-color: rgba(0,0,0,0.15);
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body class="gradient-bg text-white">
@@ -88,7 +137,11 @@
             <a href="#" class="flex items-center space-x-4 text-2xl font-bold text-white">
                 <span>Governance Action Builder</span>
             </a>
-            <!-- Menu removed as per request -->
+            <div class="flex items-center space-x-2">
+                <button id="nav-build" class="nav-link active">Builder</button>
+                <button id="nav-examples" class="nav-link">Examples</button>
+                <button id="nav-guide" class="nav-link">Guide</button>
+            </div>
         </nav>
     </header>
 
@@ -143,6 +196,67 @@
                 </div>
             </section>
         </div>
+        
+        <!-- Page: Examples -->
+        <div id="page-examples" class="page-content hidden">
+            <section class="text-center pt-20 pb-10">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 leading-tight">Governance Action Examples</h1>
+                <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+                    Complete transaction examples for each governance action type. Click any action to expand and see the details.
+                </p>
+            </section>
+
+            <section id="examples-accordion" class="max-w-4xl mx-auto space-y-4">
+                <!-- Examples will be injected here by JS -->
+            </section>
+        </div>
+
+        <!-- Page: Guide -->
+        <div id="page-guide" class="page-content hidden">
+            <div class="max-w-4xl mx-auto pt-20 pb-10">
+                <h2>A Guide to Cardano Governance Actions</h2>
+                <div class="guide-section">
+                    <h3>An Introduction to Governance Actions</h3>
+                    <p>A governance action is a formal proposal submitted on the Cardano blockchain to make a change or signal an intent. It is the fundamental mechanism through which the Cardano community can collectively decide on the future of the network. This on-chain system ensures that all decisions are transparent, auditable, and driven by stakeholder consensus.</p>
+                </div>
+
+                <div class="guide-section">
+                    <h3>Key Things to Know Before Submitting</h3>
+                    <ul>
+                        <li><strong>Who Votes?</strong> Voting power is distributed among three groups: Delegated Representatives (DReps), Stake Pool Operators (SPOs), and the Constitutional Committee (CC). The specific group(s) required to vote depends on the type of action proposed. For example, a Hard Fork requires a vote from all three, while a Treasury Withdrawal is decided by DReps.</li>
+                        <li><strong>How much does it cost?</strong> Submitting a governance action requires a deposit in ADA, which is returned to you when the action is finalized (either enacted or rejected). The current deposit amount is set by a protocol parameter and is intended to prevent spam.</li>
+                        <li><strong>How long does voting last?</strong> The voting period is tied to Cardano's epoch system. Once an action is submitted, it enters a ratification phase where it can be voted upon. This period typically lasts for a set number of epochs (e.g., up to 10 epochs for some actions), giving the community ample time to review, debate, and cast their votes.</li>
+                    </ul>
+                </div>
+
+                <div class="guide-section">
+                    <h3>How to Write a High-Quality Proposal</h3>
+                    <p>A well-written proposal is crucial for gaining community support. The metadata you generate with this tool is your chance to convince stakeholders to vote 'Yes'. Your goal should be clarity, transparency, and a compelling argument.</p>
+                    
+                    <h3>The Anatomy of a Proposal (CIP-108)</h3>
+                    <p>Your proposal metadata should contain the following four key fields:</p>
+                    <ul>
+                        <li><strong>Title:</strong> A clear, concise, and descriptive title. It should immediately tell voters what the proposal is about. (Max 80 characters)</li>
+                        <li><strong>Abstract:</strong> A short summary (2-3 sentences) of the proposal. This is the "elevator pitch" that should grab the reader's attention and make them want to learn more.</li>
+                        <li><strong>Motivation:</strong> Explain the "why" behind your proposal. What problem are you trying to solve? What opportunity are you trying to seize? Provide context and evidence to support your claims.</li>
+                        <li><strong>Rationale:</strong> This is the "how". Detail your proposed solution and explain why it's the best approach. Break down the implementation plan, discuss the potential impact, and address any risks or trade-offs. Be as specific and transparent as possible.</li>
+                    </ul>
+                </div>
+
+                 <div class="guide-section">
+                    <h3>Best Practices for Success</h3>
+                    <ul>
+                        <li><strong>Engage the Community First:</strong> Before submitting on-chain, discuss your idea on platforms like the Cardano Forum, Discord, or X/Twitter. Gather feedback, refine your proposal, and build consensus.</li>
+                        <li><strong>Be Specific and Data-Driven:</strong> Avoid vague statements. Use data, evidence, and clear metrics to support your motivation and rationale. If requesting treasury funds, provide a detailed budget.</li>
+                        <li><strong>Reference Existing Work:</strong> If your proposal relates to a Cardano Improvement Proposal (CIP), a prior community discussion, or a specific research paper, link to it in the `references` section of your metadata. This shows you've done your homework.</li>
+                        <li><strong>Keep it Professional:</strong> Use clear, professional language. Avoid hype, personal attacks, or overly technical jargon where simpler terms would suffice.</li>
+                        <li><strong>Proofread Thoroughly:</strong> A proposal with typos and grammatical errors can appear unprofessional and may deter support. Read it over carefully before generating the final JSON.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
     </main>
 
     <!-- Modal Structure -->
@@ -171,6 +285,7 @@
 
     <footer class="bg-black/20 border-t border-blue-900/50 mt-20">
         <div class="container mx-auto px-6 py-8 text-center text-gray-400 text-sm">
+            <p class="mb-4">Built by <a href="https://x.com/ThomasNordicADA" target="_blank" class="text-orange-400 hover:underline">Thomas Lindseth</a> under harassment by <a href="https://x.com/Hornan7" target="_blank" class="text-orange-400 hover:underline">Mike Hornan</a>.</p>
             <p class="mt-2">Licensed under the Apache License, Version 2.0 (the "License");</p>
             <p>you may not use this file except in compliance with the License.</p>
             <p>You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0" class="text-orange-400 hover:underline" target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a></p>
@@ -178,6 +293,223 @@
     </footer>
 
     <script>
+        // --- DATA ---
+        const examplesData = {
+            'New Constitution': {
+              metadata: `{
+  "body": {
+    "title": "Adoption of the Genesis Constitution",
+    "abstract": "This proposal enacts the first official version of the Cardano Constitution, establishing the foundational principles and governance framework for the ecosystem.",
+    "motivation": "A formal constitution is necessary to provide a clear, stable, and legitimate framework for on-chain governance, ensuring that all future decisions align with the core values of the community.",
+    "rationale": "This initial version has been drafted through extensive community consultation and feedback. Its adoption marks a pivotal step towards a fully decentralized and self-sustaining governance model as envisioned in the roadmap.",
+    "references": []
+  },
+  "authors": [],
+  "hashAlgorithm": "blake2b-256"
+}`,
+              action: `cardano-cli conway governance action create-constitution \\
+  --mainnet \\
+  --governance-action-deposit 1000000000 \\
+  --deposit-return-stake-verification-key-file path/to/stake.vkey \\
+  --anchor-url https://ipfs.io/ipfs/QmConstitutionMeta... \\
+  --anchor-data-hash c12... \\
+  --constitution-url https://ipfs.io/ipfs/QmConstitutionText... \\
+  --constitution-hash 9a2... \\
+  --guardrails-script-hash 5908545908510101003232323232323232323232323232323232323232323232323232323232323232323232323232323232259323255333573466e1d20000011180098111bab357426ae88d55cf00104554ccd5cd19b87480100044600422c6aae74004dd51aba1357446ae88d55cf1baa3255333573466e1d200a35573a002226ae84d5d11aab9e00111637546ae84d5d11aba235573c6ea800642b26006003149a2c8a4c301f801c0052000c00e0070018016006901e4070c00e003000c00d20d00fc000c0003003800a4005801c00e003002c00d20c09a0c80e1801c006001801a4101b5881380018000600700148013003801c006005801a410100078001801c006001801a4101001f8001800060070014801b0038018096007001800600690404002600060001801c0052008c00e006025801c006001801a41209d8001800060070014802b003801c006005801a410112f501c3003800c00300348202b7881300030000c00e00290066007003800c00b003482032ad7b806038403060070014803b00380180960003003800a4021801c00e003002c00d20f40380e1801c006001801a41403f800100a0c00e0029009600f0030078040c00e002900a600f003800c00b003301a483403e01a600700180060066034904801e00060001801c0052016c01e00600f801c006001801980c2402900e30000c00e002901060070030128060c00e00290116007003800c00b003483c0ba03860070018006006906432e00040283003800a40498003003800a404d802c00e00f003800c00b003301a480cb0003003800c003003301a4802b00030001801c01e0070018016006603490605c016000600700180060066034904827600060030000c00e0029014600b003801c00c04b003800c00300348203a2489b00030001801c00e006025801c006001801a4101b11dc2df80018000c0003003800a4055802c00e007003012c00e003000c00d2080b8b872c000c0006007003801809600700180060069040607e4155016000600030000c00e00290166007003012c00e003000c00d2080c001c000c0003003800a405d801c00e003002c00d20c80180e1801c006001801a412007800100a0c00e00290186007003013c0006007001480cb005801801e006003801800e00600500403003800a4069802c00c00f003001c00c007003803c00e003002c00c05300333023480692028c0004014c00c00b003003c00c00f003003c00e00f003800c00b00301480590052008003003800a406d801c00e003002c00d2000c00d2006c00060070018006006900a600060001801c0052038c00e007001801600690006006901260003003800c003003483281300020141801c005203ac00e006027801c006001801a403d800180006007001480f3003801804e00700180060069040404af3c4e302600060001801c005203ec00e006013801c006001801a4101416f0fd20b80018000600700148103003801c006005801a403501c3003800c0030034812b00030000c00e0029021600f003800c00a01ac00e003000c00ccc08d20d00f4800b00030000c0000000000803c00c016008401e006009801c006001801807e0060298000c000401e006007801c0060018018074020c000400e00f003800c00b003010c000802180020070018006006019801805e0003000400600580180760060138000800c00b00330134805200c400e00300080330004006005801a4001801a410112f58000801c00600901260008019806a40118002007001800600690404a75ee01e00060008018046000801801e000300c4832004c025201430094800a0030028052003002c00d2002c000300648010c0092002300748028c0312000300b48018c0292012300948008c0212066801a40018000c0192008300a2233335573e00250002801994004d55ce800cd55cf0008d5d08014c00cd5d10011263009222532900389800a4d2219002912c80344c01526910c80148964cc04cdd68010034564cc03801400626601800e0071801226601800e01518010096400a3000910c008600444002600244004a664600200244246466004460044460040064600444600200646a660080080066a00600224446600644b20051800484ccc02600244666ae68cdc3801000c00200500a91199ab9a33710004003000801488ccd5cd19b89002001800400a44666ae68cdc4801000c00a00122333573466e20008006005000912a999ab9a3371200400222002220052255333573466e2400800444008440040026eb400a42660080026eb000a4264666015001229002914801c8954ccd5cd19b8700400211333573466e1c00c006001002118011229002914801c88cc044cdc100200099b82002003245200522900391199ab9a3371066e08010004cdc1001001c002004403245200522900391199ab9a3371266e08010004cdc1001001c00a00048a400a45200722333573466e20cdc100200099b820020038014000912c99807001000c40062004912c99807001000c400a2002001199919ab9a357466ae880048cc028dd69aba1003375a6ae84008d5d1000934000dd60010a40064666ae68d5d1800c0020052225933006003357420031330050023574400318010600a444aa666ae68cdc3a400000222c22aa666ae68cdc4000a4000226600666e05200000233702900000088994004cdc2001800ccdc20010008cc010008004c01088954ccd5cd19b87480000044400844cc00c004cdc300100091119803112c800c60012219002911919806912c800c4c02401a442b26600a004019130040018c008002590028c804c8888888800d1900991111111002a244b267201722222222008001000c600518000001112a999ab9a3370e004002230001155333573466e240080044600823002229002914801c88ccd5cd19b893370400800266e0800800e00100208c8c0040048c0088cc008008005 \\
+  --out-file constitution.action`,
+              build: `cardano-cli conway transaction build \\
+  --mainnet \\
+  --tx-in 861...#0 \\
+  --change-address addr1... \\
+  --proposal-file constitution.action \\
+  --out-file tx.raw`,
+              sign: `cardano-cli conway transaction sign \\
+  --tx-body-file tx.raw \\
+  --signing-key-file path/to/payment.skey \\
+  --signing-key-file path/to/drep.skey \\
+  --mainnet \\
+  --out-file tx.signed`,
+              submit: `cardano-cli conway transaction submit \\
+  --mainnet \\
+  --tx-file tx.signed`
+            },
+            'Hard Fork Initiation': {
+                metadata: `{
+  "body": {
+    "title": "Initiate Hard Fork for Protocol Version 10.0",
+    "abstract": "Proposal to trigger a hard fork to upgrade the Cardano protocol to version 10.0, enabling new functionalities such as 'Proof-of-Stake v.2'.",
+    "motivation": "The upcoming protocol enhancements are critical for improving network scalability, security, and interoperability. This hard fork is a necessary step to deploy these long-planned upgrades.",
+    "rationale": "All core node software, wallets, and explorers have been updated and tested extensively on the preview testnet. The ecosystem is prepared for this transition. This action formally schedules the upgrade.",
+    "references": []
+  },
+  "authors": [],
+  "hashAlgorithm": "blake2b-256"
+}`,
+                action: `cardano-cli conway governance action create-hard-fork \\
+  --mainnet \\
+  --prev-gov-action-tx-id b48... --prev-gov-action-ix 1 \\
+  --governance-action-deposit 1000000000 \\
+  --deposit-return-stake-verification-key-file path/to/stake.vkey \\
+  --anchor-url https://ipfs.io/ipfs/QmHardFork... \\
+  --anchor-data-hash 1c8... \\
+  --protocol-major-version 10 \\
+  --protocol-minor-version 0 \\
+  --out-file hardfork.action`,
+                build: `cardano-cli conway transaction build \\
+  --mainnet \\
+  --tx-in 123...#1 \\
+  --change-address addr1... \\
+  --proposal-file hardfork.action \\
+  --out-file tx.raw`,
+                sign: `cardano-cli conway transaction sign \\
+  --tx-body-file tx.raw \\
+  --signing-key-file path/to/payment.skey \\
+  --signing-key-file path/to/cc_hot.skey \\
+  --mainnet \\
+  --out-file tx.signed`,
+                submit: `cardano-cli conway transaction submit \\
+  --mainnet \\
+  --tx-file tx.signed`
+            },
+            'Protocol Parameters': {
+                metadata: `...`,
+                action: `cardano-cli conway governance action create-protocol-parameters-update \\
+  --mainnet \\
+  --prev-gov-action-tx-id b48... --prev-gov-action-ix 1 \\
+  --governance-action-deposit 1000000000 \\
+  --deposit-return-stake-verification-key-file path/to/stake.vkey \\
+  --anchor-url https://ipfs.io/ipfs/QmParams... \\
+  --anchor-data-hash 3b5... \\
+  --min-fee-b 150000 \\
+  --out-file params.action`,
+                build: `...`,
+                sign: `...`,
+                submit: `...`
+            },
+            'Treasury Withdrawal': {
+                metadata: `{
+  "body": {
+    "title": "Funding for Open-Source Staking Analytics Dashboard",
+    "abstract": "Proposal to withdraw 50,000 ADA from the treasury to fund the development of an open-source staking analytics dashboard.",
+    "motivation": "The ecosystem lacks a comprehensive, free staking analytics tool. This will provide valuable insights to SPOs and delegators, improving transparency.",
+    "rationale": "Funds cover 6 months of development. A detailed budget and roadmap are at the reference link.",
+    "references": [{"@type": "CIP100:OtherReference", "label": "Project Proposal", "uri": "https://docs.project.io/proposal"}]
+  },
+  "authors": [], "hashAlgorithm": "blake2b-256"
+}`,
+                action: `cardano-cli conway governance action create-treasury-withdrawal \\
+  --mainnet \\
+  --governance-action-deposit 1000000000 \\
+  --deposit-return-stake-verification-key-file path/to/stake.vkey \\
+  --withdrawal "addr_test1...#50000000000" \\
+  --anchor-url https://ipfs.io/ipfs/QmW... \\
+  --anchor-data-hash 7a2... \\
+  --out-file treasury.action`,
+                build: `cardano-cli conway transaction build \\
+  --mainnet \\
+  --tx-in 861...#0 \\
+  --change-address addr1... \\
+  --proposal-file treasury.action \\
+  --out-file tx.raw`,
+                sign: `cardano-cli conway transaction sign \\
+  --tx-body-file tx.raw \\
+  --signing-key-file path/to/payment.skey \\
+  --signing-key-file path/to/drep.skey \\
+  --mainnet \\
+  --out-file tx.signed`,
+                submit: `cardano-cli conway transaction submit \\
+  --mainnet \\
+  --tx-file tx.signed`
+            },
+            'Motion of No-Confidence': {
+                metadata: `{
+  "body": {
+    "title": "Motion of No-Confidence in the Current Constitutional Committee",
+    "abstract": "This proposal declares a state of no-confidence in the sitting Constitutional Committee due to prolonged inactivity and failure to ratify critical proposals.",
+    "motivation": "The Committee's role is vital for governance. Their recent lack of engagement has created a bottleneck, stalling progress. This motion is a necessary step to restore functionality.",
+    "rationale": "Data from the last three epochs shows a consistent failure to meet the required ratification threshold on any proposal. This motion allows the community to elect a new, more active committee.",
+    "references": []
+  },
+  "authors": [], "hashAlgorithm": "blake2b-256"
+}`,
+                action: `cardano-cli conway governance action create-no-confidence \\
+  --mainnet \\
+  --prev-gov-action-tx-id a12... --prev-gov-action-ix 0 \\
+  --governance-action-deposit 1000000000 \\
+  --deposit-return-stake-verification-key-file path/to/stake.vkey \\
+  --anchor-url https://ipfs.io/ipfs/QmNoConfidence... \\
+  --anchor-data-hash 9f1... \\
+  --out-file noconfidence.action`,
+                build: `cardano-cli conway transaction build \\
+  --mainnet \\
+  --tx-in 456...#0 \\
+  --change-address addr1... \\
+  --proposal-file noconfidence.action \\
+  --out-file tx.raw`,
+                sign: `cardano-cli conway transaction sign \\
+  --tx-body-file tx.raw \\
+  --signing-key-file path/to/payment.skey \\
+  --signing-key-file path/to/drep.skey \\
+  --mainnet \\
+  --out-file tx.signed`,
+                submit: `cardano-cli conway transaction submit \\
+  --mainnet \\
+  --tx-file tx.signed`
+            },
+            'Update Committee / Threshold': {
+                metadata: `...`,
+                action: `cardano-cli conway governance action create-update-committee \\
+  --mainnet \\
+  --prev-gov-action-tx-id f4c... --prev-gov-action-ix 0 \\
+  --governance-action-deposit 1000000000 \\
+  --deposit-return-stake-verification-key-file path/to/stake.vkey \\
+  --anchor-url https://ipfs.io/ipfs/QmCommittee... \\
+  --anchor-data-hash 8e3... \\
+  --add-committee-member-cold-verification-key-file path/to/cc_member3.vkey --epoch 950 \\
+  --remove-committee-member-cold-verification-key-file path/to/cc_member1.vkey \\
+  --new-threshold 0.66 \\
+  --out-file committee.action`,
+                build: `...`,
+                sign: `...`,
+                submit: `...`
+            },
+            'Info Action': {
+                metadata: `{
+  "body": {
+    "title": "Community Poll: Prioritize Development Grant Focus Areas",
+    "abstract": "This is a non-binding poll to gauge community sentiment on which areas should be prioritized for the next round of development grants.",
+    "motivation": "To ensure that treasury funds are allocated in a way that reflects the community's collective priorities and vision for Cardano's growth.",
+    "rationale": "By conducting this poll, we can gather valuable data to inform grant-giving entities and ensure a more transparent and community-aligned allocation process.",
+    "references": []
+  },
+  "authors": [], "hashAlgorithm": "blake2b-256"
+}`,
+                action: `cardano-cli conway governance action create-info \\
+  --mainnet \\
+  --governance-action-deposit 1000000000 \\
+  --deposit-return-stake-verification-key-file path/to/stake.vkey \\
+  --anchor-url https://ipfs.io/ipfs/QmW... \\
+  --anchor-data-hash 4f8... \\
+  --out-file info.action`,
+                build: `cardano-cli conway transaction build \\
+  --mainnet \\
+  --tx-in 861...#0 \\
+  --change-address addr1... \\
+  --proposal-file info.action \\
+  --out-file tx.raw`,
+                sign: `cardano-cli conway transaction sign \\
+  --tx-body-file tx.raw \\
+  --signing-key-file path/to/payment.skey \\
+  --signing-key-file path/to/drep.skey \\
+  --mainnet \\
+  --out-file tx.signed`,
+                submit: `cardano-cli conway transaction submit \\
+  --mainnet \\
+  --tx-file tx.signed`
+            }
+        };
+
+
         // --- UTILITY FUNCTIONS ---
         const copyToClipboard = (text, button) => {
             const textarea = document.createElement('textarea');
@@ -198,6 +530,39 @@
             document.body.removeChild(textarea);
         };
         
+        // --- PAGE NAVIGATION ---
+        const navBuildBtn = document.getElementById('nav-build');
+        const navExamplesBtn = document.getElementById('nav-examples');
+        const navGuideBtn = document.getElementById('nav-guide');
+        const pageBuild = document.getElementById('page-build');
+        const pageExamples = document.getElementById('page-examples');
+        const pageGuide = document.getElementById('page-guide');
+
+        const navigateTo = (page) => {
+            pageBuild.classList.add('hidden');
+            pageExamples.classList.add('hidden');
+            pageGuide.classList.add('hidden');
+            navBuildBtn.classList.remove('active');
+            navExamplesBtn.classList.remove('active');
+            navGuideBtn.classList.remove('active');
+
+            if (page === 'build') {
+                pageBuild.classList.remove('hidden');
+                navBuildBtn.classList.add('active');
+            } else if (page === 'examples') {
+                pageExamples.classList.remove('hidden');
+                navExamplesBtn.classList.add('active');
+            } else if (page === 'guide') {
+                pageGuide.classList.remove('hidden');
+                navGuideBtn.classList.add('active');
+            }
+        };
+
+        navBuildBtn.addEventListener('click', () => navigateTo('build'));
+        navExamplesBtn.addEventListener('click', () => navigateTo('examples'));
+        navGuideBtn.addEventListener('click', () => navigateTo('guide'));
+
+
         // --- MODAL AND BUILDER LOGIC ---
         const modal = document.getElementById('proposal-modal');
         const modalTitle = document.getElementById('modal-title');
@@ -287,7 +652,6 @@
             outputElem.textContent = metadataString;
             document.getElementById('metadata-output-container').classList.remove('hidden');
             
-            // --- New logic for download button ---
             const downloadBtn = document.getElementById('download-json-btn');
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(metadataString);
             downloadBtn.setAttribute("href", dataStr);
@@ -295,8 +659,10 @@
         };
 
         const buildTransaction = () => {
-            const formValues = getFormValues('transaction-form');
-            const { metadataUrl, depositAddress, prevGovActionId, ...specificParams } = formValues;
+            const form = document.getElementById('transaction-form');
+            const formData = new FormData(form);
+            const formValues = Object.fromEntries(formData.entries());
+            const { metadataUrl, depositAddress, prevGovActionId, guardrailOption, ...specificParams } = formValues;
 
             if (!metadataUrl || !depositAddress) {
                 alert('Please provide a Metadata URL and a Deposit Return Address (stake key file name).');
@@ -305,7 +671,6 @@
             
             let command = `cardano-cli conway governance action`;
             
-            // Build command based on action type
             switch (currentActionType) {
                 case 'no-confidence':
                     command += ` create-no-confidence`;
@@ -333,10 +698,15 @@
                     if(specificParams.newThreshold) command += ` \\\n  --new-threshold ${specificParams.newThreshold}`;
                     break;
                 case 'new-constitution':
+                    if (!specificParams.constitutionUrl || !specificParams.constitutionFile) {
+                        alert('For a New Constitution, the Constitution URL and local file path are required.');
+                        return;
+                    }
                     command += ` create-constitution`;
                     if (prevGovActionId) command += ` \\\n  --prev-gov-action-tx-id ${prevGovActionId.split('#')[0]} --prev-gov-action-ix ${prevGovActionId.split('#')[1] || '0'}`;
                     command += ` \\\n  --constitution-url ${specificParams.constitutionUrl} --constitution-hash $(cardano-cli conway governance hash --file-text ${specificParams.constitutionFile})`;
-                    if (specificParams.guardrailScriptHash) {
+                    
+                    if (guardrailOption !== 'empty' && specificParams.guardrailScriptHash) {
                         command += ` \\\n  --guardrails-script-hash ${specificParams.guardrailScriptHash}`;
                     }
                     break;
@@ -365,9 +735,8 @@
                     break;
             }
             
-            // Add common flags
             command += ` \\\n  --mainnet`;
-            command += ` \\\n  --governance-action-deposit 100000000`; // Example static deposit
+            command += ` \\\n  --governance-action-deposit 100000000`; 
             command += ` \\\n  --deposit-return-stake-verification-key-file path/to/${depositAddress}.skey`;
             command += ` \\\n  --anchor-url ${metadataUrl}`;
             command += ` \\\n  --anchor-data-hash $(cardano-cli conway governance hash --url ${metadataUrl})`;
@@ -380,7 +749,27 @@
 
         const getStep1HTML = () => `<div id="step-1" class="step active"><h3 class="text-xl font-semibold text-white mb-4">Step 1: Create Proposal Metadata</h3><form id="metadata-form" class="space-y-4"><input type="text" name="title" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Proposal Title (max 80 chars)"><textarea name="abstract" rows="3" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Abstract..."></textarea><textarea name="motivation" rows="4" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Motivation..."></textarea><textarea name="rationale" rows="4" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Rationale..."></textarea><input type="url" name="references" class="w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent" placeholder="Optional: URL to supporting document"><button type="button" id="generate-metadata-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Generate Metadata JSON</button></form><div id="metadata-output-container" class="hidden mt-4"><div class="relative bg-black/30 p-4 rounded-lg"><div class="absolute top-2 right-2 flex space-x-2"><a id="download-json-btn" href="#" download="metadata.json" class="hidden bg-green-600 hover:bg-green-500 text-xs px-2 py-1 rounded text-white font-semibold">Download</a><button class="copy-btn bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button></div><pre><code id="metadata-output"></code></pre></div></div></div>`;
         const getStep2HTML = () => `<div id="step-2" class="step"><h3 class="text-xl font-semibold text-white mb-4">Step 2: Host Metadata on IPFS</h3><div class="bg-blue-900/30 border border-blue-500 text-blue-200 px-4 py-3 rounded-lg space-y-3"><p>You must now host the generated JSON file on an immutable file storage service like IPFS.</p><ol class="list-decimal list-inside space-y-2"><li>Copy the JSON from Step 1 and save it as a file (e.g., <code>metadata.json</code>).</li><li>Upload this file to an IPFS provider.</li><li>Once uploaded, you will get a URL. You will need this for the next step.</li></ol><p class="font-semibold">Recommended IPFS Web Uploaders:</p><div class="flex space-x-4"><a href="https://web3.storage/" target="_blank" class="text-orange-400 hover:underline">web3.storage</a><a href="https://nft.storage/" target="_blank" class="text-orange-400 hover:underline">NFT.storage</a><a href="https://infura.io/product/ipfs" target="_blank" class="text-orange-400 hover:underline">Infura IPFS</a></div></div></div>`;
-        const getStep3HTML = (actionType) => { let specificFields = ''; const inputClasses = "w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent"; switch (actionType) { case 'update-committee': specificFields = `<div class="space-y-4"><div><h4 class="text-md font-semibold text-gray-200 mb-2">Members to Remove</h4><div id="remove-members-container" class="space-y-2"></div><button type="button" id="add-remove-member-btn" class="mt-2 text-sm text-orange-400 hover:underline">+ Add member to remove</button></div><hr class="border-blue-700/50"><div><h4 class="text-md font-semibold text-gray-200 mb-2">Members to Add</h4><div id="add-members-container" class="space-y-2"></div><button type="button" id="add-add-member-btn" class="mt-2 text-sm text-orange-400 hover:underline">+ Add member to add</button></div><hr class="border-blue-700/50"><div><h4 class="text-md font-semibold text-gray-200 mb-2">New Threshold</h4><input type="text" name="newThreshold" class="${inputClasses}" placeholder="New Threshold (e.g., 0.6)"></div></div>`; break; case 'new-constitution': specificFields = `<input type="url" name="constitutionUrl" required class="${inputClasses}" placeholder="URL of new constitution text"><input type="text" name="constitutionFile" required class="${inputClasses}" placeholder="Local path to constitution file (for hashing)"><input type="text" name="guardrailScriptHash" class="${inputClasses}" placeholder="Guardrail Script Hash (optional)">`; break; case 'hard-fork': specificFields = `<div class="flex gap-4"><input type="number" name="majorVer" required class="w-1/2 ${inputClasses}" placeholder="Major Version"><input type="number" name="minorVer" required class="w-1/2 ${inputClasses}" placeholder="Minor Version"></div>`; break; case 'parameter-change': specificFields = `<div class="flex gap-4"><input type="text" name="paramKey" required class="w-1/2 ${inputClasses}" placeholder="Parameter Key (e.g., txFeePerByte)"><input type="text" name="paramValue" required class="w-1/2 ${inputClasses}" placeholder="New Value"></div>`; break; case 'treasury-withdrawal': specificFields = `<div id="withdrawal-recipients-container" class="space-y-2"><div class="flex gap-4 withdrawal-recipient"><input type="text" name="recipientAddr1" required class="w-2/3 ${inputClasses}" placeholder="Recipient Reward Address (bech32)"><input type="number" name="recipientAmount1" required class="w-1/3 ${inputClasses}" placeholder="Amount (ADA)"></div></div><button type="button" id="add-recipient-btn" class="text-sm text-orange-400 hover:underline">+ Add another recipient</button>`; break; } const needsPrevGovId = !['treasury-withdrawal', 'info'].includes(actionType); const prevGovIdField = needsPrevGovId ? `<input type="text" name="prevGovActionId" class="${inputClasses}" placeholder="Previous Gov Action ID (tx_hash#ix)">` : ''; return `<div id="step-3" class="step"><h3 class="text-xl font-semibold text-white mb-4">Step 3: Build Transaction Command</h3><p class="text-gray-300 mb-4 -mt-2 text-sm">This generates the command to create the governance action file. You will still need to build, sign, and submit the final transaction.</p><form id="transaction-form" class="space-y-4"><input type="url" name="metadataUrl" required class="${inputClasses}" placeholder="Paste Metadata URL from Step 2 here"><input type="text" name="depositAddress" required class="${inputClasses}" placeholder="Your Deposit Return Address (stake key file name)">${prevGovIdField}${specificFields}<button type="button" id="build-transaction-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Build Transaction Command</button></form><div id="transaction-output-container" class="hidden mt-4"><div class="relative bg-black/30 p-4 rounded-lg"><button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button><pre><code id="transaction-output"></code></pre></div></div></div>`; };
+        const getStep3HTML = (actionType) => { let specificFields = ''; const inputClasses = "w-full bg-blue-900/50 border border-blue-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus-ring-accent"; const existingGuardrailHash = '5908545908510101003232323232323232323232323232323232323232323232323232323232323232323232323232323232259323255333573466e1d20000011180098111bab357426ae88d55cf00104554ccd5cd19b87480100044600422c6aae74004dd51aba1357446ae88d55cf1baa3255333573466e1d200a35573a002226ae84d5d11aab9e00111637546ae84d5d11aba235573c6ea800642b26006003149a2c8a4c301f801c0052000c00e0070018016006901e4070c00e003000c00d20d00fc000c0003003800a4005801c00e003002c00d20c09a0c80e1801c006001801a4101b5881380018000600700148013003801c006005801a410100078001801c006001801a4101001f8001800060070014801b0038018096007001800600690404002600060001801c0052008c00e006025801c006001801a41209d8001800060070014802b003801c006005801a410112f501c3003800c00300348202b7881300030000c00e00290066007003800c00b003482032ad7b806038403060070014803b00380180960003003800a4021801c00e003002c00d20f40380e1801c006001801a41403f800100a0c00e0029009600f0030078040c00e002900a600f003800c00b003301a483403e01a600700180060066034904801e00060001801c0052016c01e00600f801c006001801980c2402900e30000c00e002901060070030128060c00e00290116007003800c00b003483c0ba03860070018006006906432e00040283003800a40498003003800a404d802c00e00f003800c00b003301a480cb0003003800c003003301a4802b00030001801c01e0070018016006603490605c016000600700180060066034904827600060030000c00e0029014600b003801c00c04b003800c00300348203a2489b00030001801c00e006025801c006001801a4101b11dc2df80018000c0003003800a4055802c00e007003012c00e003000c00d2080b8b872c000c0006007003801809600700180060069040607e4155016000600030000c00e00290166007003012c00e003000c00d2080c001c000c0003003800a405d801c00e003002c00d20c80180e1801c006001801a412007800100a0c00e00290186007003013c0006007001480cb005801801e006003801800e00600500403003800a4069802c00c00f003001c00c007003803c00e003002c00c05300333023480692028c0004014c00c00b003003c00c00f003003c00e00f003800c00b00301480590052008003003800a406d801c00e003002c00d2000c00d2006c00060070018006006900a600060001801c0052038c00e007001801600690006006901260003003800c003003483281300020141801c005203ac00e006027801c006001801a403d800180006007001480f3003801804e00700180060069040404af3c4e302600060001801c005203ec00e006013801c006001801a4101416f0fd20b80018000600700148103003801c006005801a403501c3003800c0030034812b00030000c00e0029021600f003800c00a01ac00e003000c00ccc08d20d00f4800b00030000c0000000000803c00c016008401e006009801c006001801807e0060298000c000401e006007801c0060018018074020c000400e00f003800c00b003010c000802180020070018006006019801805e0003000400600580180760060138000800c00b00330134805200c400e00300080330004006005801a4001801a410112f58000801c00600901260008019806a40118002007001800600690404a75ee01e00060008018046000801801e000300c4832004c025201430094800a0030028052003002c00d2002c000300648010c0092002300748028c0312000300b48018c0292012300948008c0212066801a40018000c0192008300a2233335573e00250002801994004d55ce800cd55cf0008d5d08014c00cd5d10011263009222532900389800a4d2219002912c80344c01526910c80148964cc04cdd68010034564cc03801400626601800e0071801226601800e01518010096400a3000910c008600444002600244004a664600200244246466004460044460040064600444600200646a660080080066a00600224446600644b20051800484ccc02600244666ae68cdc3801000c00200500a91199ab9a33710004003000801488ccd5cd19b89002001800400a44666ae68cdc4801000c00a00122333573466e20008006005000912a999ab9a3371200400222002220052255333573466e2400800444008440040026eb400a42660080026eb000a4264666015001229002914801c8954ccd5cd19b8700400211333573466e1c00c006001002118011229002914801c88cc044cdc100200099b82002003245200522900391199ab9a3371066e08010004cdc1001001c002004403245200522900391199ab9a3371266e08010004cdc1001001c00a00048a400a45200722333573466e20cdc100200099b820020038014000912c99807001000c40062004912c99807001000c400a2002001199919ab9a357466ae880048cc028dd69aba1003375a6ae84008d5d1000934000dd60010a40064666ae68d5d1800c0020052225933006003357420031330050023574400318010600a444aa666ae68cdc3a400000222c22aa666ae68cdc4000a4000226600666e05200000233702900000088994004cdc2001800ccdc20010008cc010008004c01088954ccd5cd19b87480000044400844cc00c004cdc300100091119803112c800c60012219002911919806912c800c4c02401a442b26600a004019130040018c008002590028c804c8888888800d1900991111111002a244b267201722222222008001000c600518000001112a999ab9a3370e004002230001155333573466e240080044600823002229002914801c88ccd5cd19b893370400800266e0800800e00100208c8c0040048c0088cc008008005'; switch (actionType) { case 'update-committee': specificFields = `<div class="space-y-4"><div><h4 class="text-md font-semibold text-gray-200 mb-2">Members to Remove</h4><div id="remove-members-container" class="space-y-2"></div><button type="button" id="add-remove-member-btn" class="mt-2 text-sm text-orange-400 hover:underline">+ Add member to remove</button></div><hr class="border-blue-700/50"><div><h4 class="text-md font-semibold text-gray-200 mb-2">Members to Add</h4><div id="add-members-container" class="space-y-2"></div><button type="button" id="add-add-member-btn" class="mt-2 text-sm text-orange-400 hover:underline">+ Add member to add</button></div><hr class="border-blue-700/50"><div><h4 class="text-md font-semibold text-gray-200 mb-2">New Threshold</h4><input type="text" name="newThreshold" class="${inputClasses}" placeholder="New Threshold (e.g., 0.6)"></div></div>`; break; case 'new-constitution': specificFields = `<input type="url" name="constitutionUrl" required class="${inputClasses}" placeholder="URL of new constitution text"><input type="text" name="constitutionFile" required class="${inputClasses}" placeholder="Local path to constitution file (for hashing)">
+        <div class="space-y-2 pt-2">
+            <h4 class="text-md font-semibold text-gray-200">Guardrail Script Hash</h4>
+            <div class="space-y-3">
+                <div class="flex items-center">
+                    <input id="guardrail-existing" name="guardrailOption" type="radio" value="existing" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500" checked>
+                    <label for="guardrail-existing" class="ml-3 block text-sm font-medium text-gray-300">Use Existing Guardrail Hash</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="guardrail-new" name="guardrailOption" type="radio" value="new" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500">
+                    <label for="guardrail-new" class="ml-3 block text-sm font-medium text-gray-300">Enter New Guardrail Hash</label>
+                </div>
+                <div class="flex items-center">
+                    <input id="guardrail-empty" name="guardrailOption" type="radio" value="empty" class="h-4 w-4 border-gray-300 text-orange-600 focus:ring-orange-500">
+                    <label for="guardrail-empty" class="ml-3 block text-sm font-medium text-gray-300">Leave Empty (Advanced)</label>
+                </div>
+            </div>
+            <input type="text" id="guardrailScriptHash-input" name="guardrailScriptHash" class="${inputClasses} mt-2" value="${existingGuardrailHash}" readonly>
+            <p id="guardrail-warning" class="hidden text-sm text-yellow-400 mt-1">Warning: Leaving this empty will result in a constitution with NO guardrail script. This is an advanced option. Ensure you understand the consequences.</p>
+        </div>
+        `; break; case 'hard-fork': specificFields = `<div class="flex gap-4"><input type="number" name="majorVer" required class="w-1/2 ${inputClasses}" placeholder="Major Version"><input type="number" name="minorVer" required class="w-1/2 ${inputClasses}" placeholder="Minor Version"></div>`; break; case 'parameter-change': specificFields = `<div class="flex gap-4"><input type="text" name="paramKey" required class="w-1/2 ${inputClasses}" placeholder="Parameter Key (e.g., txFeePerByte)"><input type="text" name="paramValue" required class="w-1/2 ${inputClasses}" placeholder="New Value"></div>`; break; case 'treasury-withdrawal': specificFields = `<div id="withdrawal-recipients-container" class="space-y-2"><div class="flex gap-4 withdrawal-recipient"><input type="text" name="recipientAddr1" required class="w-2/3 ${inputClasses}" placeholder="Recipient Reward Address (bech32)"><input type="number" name="recipientAmount1" required class="w-1/3 ${inputClasses}" placeholder="Amount (ADA)"></div></div><button type="button" id="add-recipient-btn" class="text-sm text-orange-400 hover:underline">+ Add another recipient</button>`; break; } const needsPrevGovId = !['treasury-withdrawal', 'info'].includes(actionType); const prevGovIdField = needsPrevGovId ? `<input type="text" name="prevGovActionId" class="${inputClasses}" placeholder="Previous Gov Action ID (tx_hash#ix)">` : ''; return `<div id="step-3" class="step"><h3 class="text-xl font-semibold text-white mb-4">Step 3: Build Transaction Command</h3><p class="text-gray-300 mb-4 -mt-2 text-sm">This generates the command to create the governance action file. You will still need to build, sign, and submit the final transaction.</p><form id="transaction-form" class="space-y-4"><input type="url" name="metadataUrl" required class="${inputClasses}" placeholder="Paste Metadata URL from Step 2 here"><input type="text" name="depositAddress" required class="${inputClasses}" placeholder="Your Deposit Return Address (stake key file name)">${prevGovIdField}${specificFields}<button type="button" id="build-transaction-btn" class="btn-primary w-full font-bold py-2 px-4 rounded-lg transition-colors">Build Transaction Command</button></form><div id="transaction-output-container" class="hidden mt-4"><div class="relative bg-black/30 p-4 rounded-lg"><button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button><pre><code id="transaction-output"></code></pre></div></div></div>`; };
         
         createProposalButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -434,6 +823,33 @@
                         addContainer.appendChild(newAddMember);
                     });
                 }
+                
+                 if (currentActionType === 'new-constitution') {
+                    const hashInput = document.getElementById('guardrailScriptHash-input');
+                    const warning = document.getElementById('guardrail-warning');
+                    const existingGuardrailHash = '5908545908510101003232323232323232323232323232323232323232323232323232323232323232323232323232323232259323255333573466e1d20000011180098111bab357426ae88d55cf00104554ccd5cd19b87480100044600422c6aae74004dd51aba1357446ae88d55cf1baa3255333573466e1d200a35573a002226ae84d5d11aab9e00111637546ae84d5d11aba235573c6ea800642b26006003149a2c8a4c301f801c0052000c00e0070018016006901e4070c00e003000c00d20d00fc000c0003003800a4005801c00e003002c00d20c09a0c80e1801c006001801a4101b5881380018000600700148013003801c006005801a410100078001801c006001801a4101001f8001800060070014801b0038018096007001800600690404002600060001801c0052008c00e006025801c006001801a41209d8001800060070014802b003801c006005801a410112f501c3003800c00300348202b7881300030000c00e00290066007003800c00b003482032ad7b806038403060070014803b00380180960003003800a4021801c00e003002c00d20f40380e1801c006001801a41403f800100a0c00e0029009600f0030078040c00e002900a600f003800c00b003301a483403e01a600700180060066034904801e00060001801c0052016c01e00600f801c006001801980c2402900e30000c00e002901060070030128060c00e00290116007003800c00b003483c0ba03860070018006006906432e00040283003800a40498003003800a404d802c00e00f003800c00b003301a480cb0003003800c003003301a4802b00030001801c01e0070018016006603490605c016000600700180060066034904827600060030000c00e0029014600b003801c00c04b003800c00300348203a2489b00030001801c00e006025801c006001801a4101b11dc2df80018000c0003003800a4055802c00e007003012c00e003000c00d2080b8b872c000c0006007003801809600700180060069040607e4155016000600030000c00e00290166007003012c00e003000c00d2080c001c000c0003003800a405d801c00e003002c00d20c80180e1801c006001801a412007800100a0c00e00290186007003013c0006007001480cb005801801e006003801800e00600500403003800a4069802c00c00f003001c00c007003803c00e003002c00c05300333023480692028c0004014c00c00b003003c00c00f003003c00e00f003800c00b00301480590052008003003800a406d801c00e003002c00d2000c00d2006c00060070018006006900a600060001801c0052038c00e007001801600690006006901260003003800c003003483281300020141801c005203ac00e006027801c006001801a403d800180006007001480f3003801804e00700180060069040404af3c4e302600060001801c005203ec00e006013801c006001801a4101416f0fd20b80018000600700148103003801c006005801a403501c3003800c0030034812b00030000c00e0029021600f003800c00a01ac00e003000c00ccc08d20d00f4800b00030000c0000000000803c00c016008401e006009801c006001801807e0060298000c000401e006007801c0060018018074020c000400e00f003800c00b003010c000802180020070018006006019801805e0003000400600580180760060138000800c00b00330134805200c400e00300080330004006005801a4001801a410112f58000801c00600901260008019806a40118002007001800600690404a75ee01e00060008018046000801801e000300c4832004c025201430094800a0030028052003002c00d2002c000300648010c0092002300748028c0312000300b48018c0292012300948008c0212066801a40018000c0192008300a2233335573e00250002801994004d55ce800cd55cf0008d5d08014c00cd5d10011263009222532900389800a4d2219002912c80344c01526910c80148964cc04cdd68010034564cc03801400626601800e0071801226601800e01518010096400a3000910c008600444002600244004a664600200244246466004460044460040064600444600200646a660080080066a00600224446600644b20051800484ccc02600244666ae68cdc3801000c00200500a91199ab9a33710004003000801488ccd5cd19b89002001800400a44666ae68cdc4801000c00a00122333573466e20008006005000912a999ab9a3371200400222002220052255333573466e2400800444008440040026eb400a42660080026eb000a4264666015001229002914801c8954ccd5cd19b8700400211333573466e1c00c006001002118011229002914801c88cc044cdc100200099b82002003245200522900391199ab9a3371066e08010004cdc1001001c002004403245200522900391199ab9a3371266e08010004cdc1001001c00a00048a400a45200722333573466e20cdc100200099b820020038014000912c99807001000c40062004912c99807001000c400a2002001199919ab9a357466ae880048cc028dd69aba1003375a6ae84008d5d1000934000dd60010a40064666ae68d5d1800c0020052225933006003357420031330050023574400318010600a444aa666ae68cdc3a400000222c22aa666ae68cdc4000a4000226600666e05200000233702900000088994004cdc2001800ccdc20010008cc010008004c01088954ccd5cd19b87480000044400844cc00c004cdc300100091119803112c800c60012219002911919806912c800c4c02401a442b26600a004019130040018c008002590028c804c8888888800d1900991111111002a244b267201722222222008001000c600518000001112a999ab9a3370e004002230001155333573466e240080044600823002229002914801c88ccd5cd19b893370400800266e0800800e00100208c8c0040048c0088cc008008005';
+                    document.querySelectorAll('input[name="guardrailOption"]').forEach(radio => {
+                        radio.addEventListener('change', (e) => {
+                            warning.classList.add('hidden');
+                            switch (e.target.value) {
+                                case 'existing':
+                                    hashInput.value = existingGuardrailHash;
+                                    hashInput.readOnly = true;
+                                    break;
+                                case 'new':
+                                    hashInput.value = '';
+                                    hashInput.readOnly = false;
+                                    hashInput.placeholder = 'Enter new guardrail script hash';
+                                    break;
+                                case 'empty':
+                                    hashInput.value = '';
+                                    hashInput.readOnly = true;
+                                    warning.classList.remove('hidden');
+                                    break;
+                            }
+                        });
+                    });
+                }
             });
         });
 
@@ -444,24 +860,125 @@
                 }
             });
         }
+        
+        // Delegated event listener for dynamic elements
+        document.body.addEventListener('click', (e) => {
+            if (e.target && e.target.classList.contains('remove-row-btn')) {
+                const row = e.target.closest('.dynamic-row');
+                if (row) {
+                    row.remove();
+                }
+            }
+             if (e.target && e.target.classList.contains('copy-btn')) {
+                const codeElement = e.target.closest('.relative').querySelector('code');
+                copyToClipboard(codeElement.textContent, e.target);
+            }
+        });
 
         if (modal) {
-            // Main modal click listener for closing and for delegated events
-            modal.addEventListener('click', (e) => {
-                // Close modal if backdrop is clicked
+             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     modal.classList.add('hidden');
                 }
-                
-                // Handle removing dynamic rows
-                if (e.target && e.target.classList.contains('remove-row-btn')) {
-                    const row = e.target.closest('.dynamic-row');
-                    if (row) {
-                        row.remove();
-                    }
-                }
             });
         }
+
+        // --- EXAMPLES PAGE LOGIC ---
+        const accordionContainer = document.getElementById('examples-accordion');
+
+        const createExampleHTML = (title, data) => {
+            return `
+                <div class="rounded-lg overflow-hidden border border-blue-800/50">
+                    <button class="accordion-button w-full text-left p-4 bg-blue-900/50 hover:bg-blue-900/70 transition-colors flex justify-between items-center">
+                        <span class="text-xl font-bold">${title}</span>
+                        <svg class="w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-6 space-y-6">
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2 text-orange-300">Metadata JSON</h4>
+                                <div class="relative bg-black/30 p-4 rounded-lg">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                    <pre><code class="language-json">${data.metadata}</code></pre>
+                                </div>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold text-lg mb-2 text-orange-300">1. Create Action File</h4>
+                                <div class="relative bg-black/30 p-4 rounded-lg">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                    <pre><code class="language-bash">${data.action}</code></pre>
+                                </div>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold text-lg mb-2 text-orange-300">2. Build Transaction</h4>
+                                <div class="relative bg-black/30 p-4 rounded-lg">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                    <pre><code class="language-bash">${data.build}</code></pre>
+                                </div>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold text-lg mb-2 text-orange-300">3. Sign Transaction</h4>
+                                <div class="relative bg-black/30 p-4 rounded-lg">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                    <pre><code class="language-bash">${data.sign}</code></pre>
+                                </div>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold text-lg mb-2 text-orange-300">4. Submit Transaction</h4>
+                                <div class="relative bg-black/30 p-4 rounded-lg">
+                                    <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded font-semibold">Copy</button>
+                                    <pre><code class="language-bash">${data.submit}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+        
+        // Populate examples - ensuring order matches the main page
+        const orderedTitles = [
+            'New Constitution',
+            'Hard Fork Initiation',
+            'Protocol Parameters',
+            'Treasury Withdrawal',
+            'Motion of No-Confidence',
+            'Update Committee / Threshold',
+            'Info Action'
+        ];
+
+        orderedTitles.forEach(title => {
+            if (examplesData[title]) {
+                accordionContainer.innerHTML += createExampleHTML(title, examplesData[title]);
+            }
+        });
+        
+        // Accordion click listener
+        accordionContainer.addEventListener('click', (e) => {
+            const button = e.target.closest('.accordion-button');
+            if (!button) return;
+
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('svg');
+
+            // Close all other accordions
+            accordionContainer.querySelectorAll('.accordion-button').forEach(otherButton => {
+                if (otherButton !== button) {
+                    otherButton.nextElementSibling.style.maxHeight = null;
+                    otherButton.querySelector('svg').classList.remove('rotate-180');
+                }
+            });
+
+            // Toggle current accordion
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.classList.remove('rotate-180');
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.classList.add('rotate-180');
+            }
+        });
+
     </script>
 </body>
 </html>
